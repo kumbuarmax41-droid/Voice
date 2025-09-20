@@ -1,0 +1,449 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie Instantanée</title>
+    <style>
+        /* Styles généraux */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* En-tête */
+        header {
+            background-color: #4e8cff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #4e8cff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Contenu principal */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Liste des contacts */
+        .contacts-container {
+            width: 300px;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .contacts-header {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+        }
+        
+        .search-container {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .contact {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .contact:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .contact.active {
+            background-color: #edf4ff;
+        }
+        
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+        }
+        
+        .contact-lastmsg {
+            font-size: 0.8rem;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        
+        /* Zone de conversation */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .current-contact {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message.sent {
+            align-items: flex-end;
+            margin-left: auto;
+        }
+        
+        .message.received {
+            align-items: flex-start;
+        }
+        
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .message.sent .message-content {
+            background-color: #4e8cff;
+            color: white;
+        }
+        
+        .message.received .message-content {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #777;
+        }
+        
+        .message-input-container {
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+        }
+        
+        .send-button {
+            margin-left: 10px;
+            background-color: #4e8cff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contacts-container {
+                width: 80px;
+            }
+            
+            .contact-info {
+                display: none;
+            }
+            
+            .contact-avatar {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête -->
+    <header>
+        <div class="logo">Messagerie</div>
+        <div class="user-info">
+            <span>Jean Dupont</span>
+            <div class="avatar">JD</div>
+        </div>
+    </header>
+    
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <!-- Liste des contacts -->
+        <div class="contacts-container">
+            <div class="contacts-header">Contacts</div>
+            <div class="search-container">
+                <input type="text" placeholder="Rechercher...">
+            </div>
+            <div class="contact-list">
+                <div class="contact active">
+                    <div class="contact-avatar">MS</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Marie Smith</div>
+                        <div class="contact-lastmsg">Salut, comment vas-tu ?</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">PD</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Pierre Dubois</div>
+                        <div class="contact-lastmsg">À demain pour la réunion !</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">EJ</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Emma Johnson</div>
+                        <div class="contact-lastmsg">Merci pour ton aide !</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">TM</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Thomas Martin</div>
+                        <div class="contact-lastmsg">Tu as vu le dernier film ?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Zone de conversation -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="current-contact">
+                    <div class="contact-avatar">MS</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Marie Smith</div>
+                        <div class="contact-lastmsg">En ligne</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="messages-container">
+                <div class="message received">
+                    <div class="message-content">Salut Jean, comment vas-tu ?</div>
+                    <div class="message-time">10:05</div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-content">Salut Marie ! Je vais bien, merci. Et toi ?</div>
+                    <div class="message-time">10:07</div>
+                </div>
+                
+                <div class="message received">
+                    <div class="message-content">Très bien aussi. Tu as terminé le projet sur lequel tu travaillais ?</div>
+                    <div class="message-time">10:08</div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-content">Oui, je l'ai finalisé hier. C'était assez intense mais le résultat est satisfaisant.</div>
+                    <div class="message-time">10:10</div>
+                </div>
+                
+                <div class="message received">
+                    <div class="message-content">Félicitations ! J'ai hâte de voir le résultat.</div>
+                    <div class="message-time">10:12</div>
+                </div>
+            </div>
+            
+            <div class="message-input-container">
+                <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
+                <button class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonctionnalité d'envoi de message
+        const messageInput = document.querySelector('.message-input');
+        const sendButton = document.querySelector('.send-button');
+        const messagesContainer = document.querySelector('.messages-container');
+        
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                // Créer un nouveau message
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'sent');
+                
+                const now = new Date();
+                const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+                
+                messageElement.innerHTML = `
+                    <div class="message-content">${messageText}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                // Ajouter le message à la conversation
+                messagesContainer.appendChild(messageElement);
+                
+                // Effacer le champ de saisie
+                messageInput.value = '';
+                
+                // Faire défiler vers le bas pour voir le nouveau message
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Simuler une réponse après un délai
+                setTimeout(() => {
+                    const replyElement = document.createElement('div');
+                    replyElement.classList.add('message', 'received');
+                    
+                    replyElement.innerHTML = `
+                        <div class="message-content">Merci pour votre message ! Je vous répondrai dès que possible.</div>
+                        <div class="message-time">${timeString}</div>
+                    `;
+                    
+                    messagesContainer.appendChild(replyElement);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 1000);
+            }
+        }
+        
+        // Événements pour l'envoi de message
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Sélectionner un contact
+        const contacts = document.querySelectorAll('.contact');
+        const currentContact = document.querySelector('.current-contact');
+        const chatHeader = document.querySelector('.chat-header');
+        
+        contacts.forEach(contact => {
+            contact.addEventListener('click', () => {
+                // Retirer la classe active de tous les contacts
+                contacts.forEach(c => c.classList.remove('active'));
+                
+                // Ajouter la classe active au contact cliqué
+                contact.classList.add('active');
+                
+                // Mettre à jour le contact actuel dans l'en-tête de chat
+                const contactAvatar = contact.querySelector('.contact-avatar').innerHTML;
+                const contactName = contact.querySelector('.contact-name').innerHTML;
+                
+                currentContact.innerHTML = `
+                    <div class="contact-avatar">${contactAvatar}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${contactName}</div>
+                        <div class="contact-lastmsg">En ligne</div>
+                    </div>
+                `;
+            });
+        });
+        
+        // Faire défiler les messages vers le bas au chargement
+        window.addEventListener('load', () => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+    </script>
+</body>
+</html><script>function myFunction() {
+  alert("Button Clicked")
+}</script>
