@@ -14,17 +14,28 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --background-color: #f0f2f5;
+            --text-color: #1c1e21;
+            --card-bg: #ffffff;
+            --border-color: #e4e6eb;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+        
         body {
-            background-color: #f0f2f5;
-            color: #1c1e21;
-            height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         
         /* En-tête */
         header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 12px 20px;
             display: flex;
@@ -62,7 +73,7 @@
         
         .btn-primary {
             background-color: white;
-            color: #6a11cb;
+            color: var(--primary-color);
         }
         
         .btn-primary:hover {
@@ -79,8 +90,8 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
         
-        /* Contenu principal */
-        .main-container {
+        /* Conteneur principal */
+        .container {
             display: flex;
             flex: 1;
             overflow: hidden;
@@ -89,10 +100,91 @@
             margin: 0 auto;
         }
         
+        /* Pages d'authentification */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .auth-subtitle {
+            color: #65676b;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .form-error {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .auth-link {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
         /* Navigation latérale */
         .sidebar {
             width: 260px;
-            background-color: white;
+            background-color: var(--card-bg);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -101,14 +193,14 @@
         
         .sidebar-section {
             padding: 20px;
-            border-bottom: 1px solid #e4e6eb;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .sidebar-title {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 15px;
-            color: #6a11cb;
+            color: var(--primary-color);
         }
         
         .sidebar-menu {
@@ -127,12 +219,12 @@
         }
         
         .sidebar-menu li:hover {
-            background-color: #f0f2f5;
+            background-color: var(--background-color);
         }
         
         .sidebar-menu li.active {
             background-color: #eef3ff;
-            color: #6a11cb;
+            color: var(--primary-color);
             font-weight: 500;
         }
         
@@ -144,8 +236,8 @@
         /* Liste des discussions */
         .discussions-container {
             width: 350px;
-            background-color: white;
-            border-right: 1px solid #e4e6eb;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -153,7 +245,7 @@
         
         .discussions-header {
             padding: 20px;
-            border-bottom: 1px solid #e4e6eb;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -166,13 +258,13 @@
         
         .search-container {
             padding: 15px 20px;
-            border-bottom: 1px solid #e4e6eb;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .search-box {
             display: flex;
             align-items: center;
-            background-color: #f0f2f5;
+            background-color: var(--background-color);
             border-radius: 20px;
             padding: 8px 15px;
         }
@@ -200,7 +292,7 @@
             align-items: center;
             padding: 15px 20px;
             cursor: pointer;
-            border-bottom: 1px solid #f0f2f5;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .discussion:hover {
@@ -215,7 +307,7 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -255,7 +347,7 @@
         
         .unread-count {
             display: inline-block;
-            background-color: #6a11cb;
+            background-color: var(--primary-color);
             color: white;
             font-size: 0.8rem;
             padding: 2px 6px;
@@ -267,13 +359,13 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #f0f2f5;
+            background-color: var(--background-color);
         }
         
         .chat-header {
             padding: 15px 25px;
-            border-bottom: 1px solid #e4e6eb;
-            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -300,7 +392,7 @@
         }
         
         .chat-actions button:hover {
-            color: #6a11cb;
+            color: var(--primary-color);
         }
         
         .messages-container {
@@ -341,14 +433,14 @@
         }
         
         .message.sent .message-content {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             border-bottom-right-radius: 5px;
         }
         
         .message.received .message-content {
-            background-color: white;
-            border: 1px solid #e4e6eb;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-bottom-left-radius: 5px;
         }
         
@@ -364,13 +456,13 @@
         }
         
         .message-status {
-            color: #6a11cb;
+            color: var(--primary-color);
         }
         
         .message-input-container {
             padding: 20px 25px;
-            background-color: white;
-            border-top: 1px solid #e4e6eb;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
         }
@@ -378,7 +470,7 @@
         .message-input {
             flex: 1;
             padding: 12px 18px;
-            border: 1px solid #e4e6eb;
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             outline: none;
             resize: none;
@@ -388,7 +480,7 @@
         }
         
         .message-input:focus {
-            border-color: #6a11cb;
+            border-color: var(--primary-color);
         }
         
         .attachment-button {
@@ -401,7 +493,7 @@
         }
         
         .send-button {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             border: none;
             border-radius: 50%;
@@ -422,8 +514,8 @@
         /* Suggestions de discussions */
         .suggestions-container {
             width: 300px;
-            background-color: white;
-            border-left: 1px solid #e4e6eb;
+            background-color: var(--card-bg);
+            border-left: 1px solid var(--border-color);
             overflow-y: auto;
             padding: 20px;
         }
@@ -452,7 +544,7 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -474,7 +566,7 @@
         
         .interest-tag {
             background-color: #eef3ff;
-            color: #6a11cb;
+            color: var(--primary-color);
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.8rem;
@@ -530,6 +622,50 @@
                 margin-right: 0;
             }
         }
+        
+        /* Pages */
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .page.active {
+            display: flex;
+        }
+        
+        /* Alertes */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .alert.show {
+            transform: translateX(0);
+        }
+        
+        .alert-success {
+            background-color: var(--success-color);
+        }
+        
+        .alert-error {
+            background-color: var(--error-color);
+        }
+        
+        .alert i {
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -539,391 +675,775 @@
             <i class="fas fa-comments"></i>
             <span>Tell Me</span>
         </div>
-        <div class="user-actions">
-            <button class="btn btn-outline"><i class="fas fa-compass"></i> Découvrir</button>
-            <button class="btn btn-outline"><i class="fas fa-bell"></i></button>
-            <button class="btn btn-primary"><i class="fas fa-user"></i> Mon profil</button>
+        <div class="user-actions" id="headerAuthButtons">
+            <button class="btn btn-outline" id="discoverBtn"><i class="fas fa-compass"></i> Découvrir</button>
+            <button class="btn btn-outline" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Connexion</button>
+            <button class="btn btn-primary" id="registerBtn"><i class="fas fa-user-plus"></i> Inscription</button>
+        </div>
+        <div class="user-actions" id="headerUserMenu" style="display: none;">
+            <button class="btn btn-outline" id="discoverBtnLogged"><i class="fas fa-compass"></i> Découvrir</button>
+            <button class="btn btn-outline" id="notificationsBtn"><i class="fas fa-bell"></i></button>
+            <button class="btn btn-primary" id="profileBtn"><i class="fas fa-user"></i> <span id="usernameHeader"></span></button>
+            <button class="btn btn-outline" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </header>
     
-    <!-- Contenu principal -->
-    <div class="main-container">
-        <!-- Navigation latérale -->
-        <div class="sidebar">
-            <div class="sidebar-section">
-                <ul class="sidebar-menu">
-                    <li class="active"><i class="fas fa-comment-dots"></i> <span>Messages</span></li>
-                    <li><i class="fas fa-users"></i> <span>Groupes</span></li>
-                    <li><i class="fas fa-star"></i> <span>Favoris</span></li>
-                    <li><i class="fas fa-hashtag"></i> <span>Thématiques</span></li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="sidebar-title">THÉMATIES</div>
-                <ul class="sidebar-menu">
-                    <li><i class="fas fa-music"></i> <span>Musique</span></li>
-                    <li><i class="fas fa-basketball-ball"></i> <span>Sports</span></li>
-                    <li><i class="fas fa-film"></i> <span>Cinéma</span></li>
-                    <li><i class="fas fa-book"></i> <span>Littérature</span></li>
-                    <li><i class="fas fa-laptop-code"></i> <span>Technologie</span></li>
-                    <li><i class="fas fa-plus"></i> <span>Voir plus</span></li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-section">
-                <div class="sidebar-title">PARAMÈTRES</div>
-                <ul class="sidebar-menu">
-                    <li><i class="fas fa-cog"></i> <span>Paramètres</span></li>
-                    <li><i class="fas fa-moon"></i> <span>Apparence</span></li>
-                    <li><i class="fas fa-question-circle"></i> <span>Aide</span></li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Liste des discussions -->
-        <div class="discussions-container">
-            <div class="discussions-header">
-                <div class="discussions-title">Messages</div>
-                <button class="btn btn-primary"><i class="fas fa-edit"></i> Nouveau</button>
-            </div>
-            
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Rechercher une discussion...">
-                </div>
-            </div>
-            
-            <div class="discussion-list">
-                <div class="discussion active">
-                    <div class="discussion-avatar">MS</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Marie Smith</div>
-                        <div class="discussion-preview">Je pense que l'art contemporain représente parfaitement notre époque</div>
+    <!-- Pages -->
+    <div class="container">
+        <!-- Page d'authentification -->
+        <div class="page active" id="authPage">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="auth-title">Bienvenue sur Tell Me</h1>
+                        <p class="auth-subtitle">Connectez-vous pour rejoindre la conversation</p>
                     </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">10:42</div>
-                        <div class="unread-count">3</div>
+                    <div class="auth-form" id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="loginEmail" placeholder="Votre adresse email">
+                            <div class="form-error" id="loginEmailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mot de passe</label>
+                            <input type="password" class="form-input" id="loginPassword" placeholder="Votre mot de passe">
+                            <div class="form-error" id="loginPasswordError"></div>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="loginSubmit">Se connecter</button>
+                        <div class="auth-switch">
+                            <p>Pas encore inscrit ? <span class="auth-link" id="showRegister">Créer un compte</span></p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="discussion">
-                    <div class="discussion-avatar">PD</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Pierre Dubois</div>
-                        <div class="discussion-preview">As-tu regardé le dernier match ? Quelle performance incroyable !</div>
-                    </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">Hier</div>
-                    </div>
-                </div>
-                
-                <div class="discussion">
-                    <div class="discussion-avatar">EJ</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Emma Johnson</div>
-                        <div class="discussion-preview">J'ai adoré ton analyse sur ce livre, on devrait en discuter plus longuement</div>
-                    </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">Lun.</div>
-                    </div>
-                </div>
-                
-                <div class="discussion">
-                    <div class="discussion-avatar">TM</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Thomas Martin</div>
-                        <div class="discussion-preview">Tu as raison, la technologie devrait être plus accessible à tous</div>
-                    </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">Dim.</div>
-                        <div class="unread-count">1</div>
-                    </div>
-                </div>
-                
-                <div class="discussion">
-                    <div class="discussion-avatar">LC</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Lucie Chen</div>
-                        <div class="discussion-preview">Merci pour tes recommandations musicales, j'adore cette découverte !</div>
-                    </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">Sam.</div>
-                    </div>
-                </div>
-                
-                <div class="discussion">
-                    <div class="discussion-avatar">AG</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Antoine Garcia</div>
-                        <div class="discussion-preview">Ton point de vue sur la politique environnementale m'a vraiment fait réfléchir</div>
-                    </div>
-                    <div class="discussion-meta">
-                        <div class="discussion-time">Ven.</div>
+                    <div class="auth-form" id="registerForm" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Nom complet</label>
+                            <input type="text" class="form-input" id="registerName" placeholder="Votre nom complet">
+                            <div class="form-error" id="registerNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="registerEmail" placeholder="Votre adresse email">
+                            <div class="form-error" id="registerEmailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mot de passe</label>
+                            <input type="password" class="form-input" id="registerPassword" placeholder="Créez un mot de passe">
+                            <div class="form-error" id="registerPasswordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmer le mot de passe</label>
+                            <input type="password" class="form-input" id="registerPasswordConfirm" placeholder="Confirmez votre mot de passe">
+                            <div class="form-error" id="registerPasswordConfirmError"></div>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="registerSubmit">Créer un compte</button>
+                        <div class="auth-switch">
+                            <p>Déjà inscrit ? <span class="auth-link" id="showLogin">Se connecter</span></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Zone de conversation -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="current-discussion">
-                    <div class="discussion-avatar">MS</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">Marie Smith</div>
-                        <div class="discussion-status">En ligne</div>
-                    </div>
+        <!-- Page principale de l'application -->
+        <div class="page" id="appPage">
+            <!-- Navigation latérale -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <ul class="sidebar-menu">
+                        <li class="active"><i class="fas fa-comment-dots"></i> <span>Messages</span></li>
+                        <li><i class="fas fa-users"></i> <span>Groupes</span></li>
+                        <li><i class="fas fa-star"></i> <span>Favoris</span></li>
+                        <li><i class="fas fa-hashtag"></i> <span>Thématiques</span></li>
+                    </ul>
                 </div>
-                <div class="chat-actions">
-                    <button><i class="fas fa-phone"></i></button>
-                    <button><i class="fas fa-video"></i></button>
-                    <button><i class="fas fa-info-circle"></i></button>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">THÉMATIQUES</div>
+                    <ul class="sidebar-menu">
+                        <li><i class="fas fa-music"></i> <span>Musique</span></li>
+                        <li><i class="fas fa-basketball-ball"></i> <span>Sports</span></li>
+                        <li><i class="fas fa-film"></i> <span>Cinéma</span></li>
+                        <li><i class="fas fa-book"></i> <span>Littérature</span></li>
+                        <li><i class="fas fa-laptop-code"></i> <span>Technologie</span></li>
+                        <li><i class="fas fa-plus"></i> <span>Voir plus</span></li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">PARAMÈTRES</div>
+                    <ul class="sidebar-menu">
+                        <li><i class="fas fa-cog"></i> <span>Paramètres</span></li>
+                        <li><i class="fas fa-moon"></i> <span>Apparence</span></li>
+                        <li><i class="fas fa-question-circle"></i> <span>Aide</span></li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="messages-container">
-                <div class="message received">
-                    <div class="message-content">Salut Jean ! J'ai visité une exposition d'art contemporain hier, c'était fascinant !</div>
-                    <div class="message-info">
-                        <span class="message-time">10:30</span>
+            <!-- Liste des discussions -->
+            <div class="discussions-container">
+                <div class="discussions-header">
+                    <div class="discussions-title">Messages</div>
+                    <button class="btn btn-primary" id="newConversationBtn"><i class="fas fa-edit"></i> Nouveau</button>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Rechercher une discussion..." id="discussionSearch">
                     </div>
                 </div>
                 
-                <div class="message sent">
-                    <div class="message-content">Bonjour Marie ! Raconte-moi, qu'est-ce qui t'a particulièrement marquée ?</div>
-                    <div class="message-info">
-                        <span class="message-time">10:32</span>
-                        <span class="message-status"><i class="fas fa-check-double"></i></span>
+                <div class="discussion-list" id="discussionList">
+                    <!-- Les discussions seront chargées ici dynamiquement -->
+                </div>
+            </div>
+            
+            <!-- Zone de conversation -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="current-discussion" id="currentDiscussion">
+                        <div class="discussion-avatar" id="currentAvatar">TM</div>
+                        <div class="discussion-info">
+                            <div class="discussion-name" id="currentName">Tell Me</div>
+                            <div class="discussion-status">Plateforme de discussion libre</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button><i class="fas fa-phone"></i></button>
+                        <button><i class="fas fa-video"></i></button>
+                        <button><i class="fas fa-info-circle"></i></button>
                     </div>
                 </div>
                 
-                <div class="message received">
-                    <div class="message-content">Il y avait cette installation qui mêlait lumière et son, créant une atmosphère vraiment immersive. Je pense que l'art contemporain arrive à capturer l'essence de notre époque comme aucun autre mouvement avant.</div>
-                    <div class="message-info">
-                        <span class="message-time">10:35</span>
+                <div class="messages-container" id="messagesContainer">
+                    <div class="message received">
+                        <div class="message-content">Bienvenue sur Tell Me ! Commencez une conversation avec quelqu'un pour partager vos points de vue.</div>
+                        <div class="message-info">
+                            <span class="message-time">Maintenant</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="message sent">
-                    <div class="message-content">C'est intéressant ! Mais parfois je me demande si certaines œuvres ne sont pas trop conceptuelles, au point de perdre le public. Qu'en penses-tu ?</div>
-                    <div class="message-info">
-                        <span class="message-time">10:38</span>
-                        <span class="message-status"><i class="fas fa-check-double"></i></span>
-                    </div>
-                </div>
-                
-                <div class="message received">
-                    <div class="message-content">Je comprends ton point de vue. Mais je crois que l'art n'a pas toujours besoin d'être immédiatement compréhensible. Parfois, c'est justement dans la réflexion et l'incompréhension initiale que réside la beauté de l'œuvre.</div>
-                    <div class="message-info">
-                        <span class="message-time">10:40</span>
-                    </div>
-                </div>
-                
-                <div class="message sent">
-                    <div class="message-content">Tu as raison. Peut-être que je devrais aborder ces œuvres avec plus d'ouverture d'esprit. As-tu des artistes contemporains à me recommander pour commencer ?</div>
-                    <div class="message-info">
-                        <span class="message-time">10:42</span>
-                        <span class="message-status"><i class="fas fa-check"></i></span>
-                    </div>
+                <div class="message-input-container">
+                    <textarea class="message-input" id="messageInput" placeholder="Écrivez votre message..."></textarea>
+                    <button class="attachment-button">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="send-button" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
             
-            <div class="message-input-container">
-                <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
-                <button class="attachment-button">
-                    <i class="fas fa-paperclip"></i>
-                </button>
-                <button class="send-button">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Suggestions de discussions -->
-        <div class="suggestions-container">
-            <h3>Suggestions de conversations</h3>
-            
-            <div class="suggestion-card">
-                <div class="suggestion-header">
-                    <div class="suggestion-avatar">SD</div>
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Sophie Dupont</div>
-                        <div class="suggestion-status">En ligne</div>
-                    </div>
-                </div>
-                <div class="suggestion-interests">
-                    <span class="interest-tag">Photographie</span>
-                    <span class="interest-tag">Voyage</span>
-                    <span class="interest-tag">Nature</span>
-                </div>
-            </div>
-            
-            <div class="suggestion-card">
-                <div class="suggestion-header">
-                    <div class="suggestion-avatar">ML</div>
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Michel Lambert</div>
-                        <div class="suggestion-status">En ligne</div>
-                    </div>
-                </div>
-                <div class="suggestion-interests">
-                    <span class="interest-tag">Science</span>
-                    <span class="interest-tag">Histoire</span>
-                    <span class="interest-tag">Philosophie</span>
-                </div>
-            </div>
-            
-            <div class="suggestion-card">
-                <div class="suggestion-header">
-                    <div class="suggestion-avatar">CJ</div>
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Clara Jones</div>
-                        <div class="suggestion-status">Hors ligne</div>
-                    </div>
-                </div>
-                <div class="suggestion-interests">
-                    <span class="interest-tag">Musique</span>
-                    <span class="interest-tag">Écriture</span>
-                    <span class="interest-tag">Théâtre</span>
-                </div>
-            </div>
-            
-            <div class="suggestion-card">
-                <div class="suggestion-header">
-                    <div class="suggestion-avatar">RB</div>
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Robert Brown</div>
-                        <div class="suggestion-status">En ligne</div>
-                    </div>
-                </div>
-                <div class="suggestion-interests">
-                    <span class="interest-tag">Technologie</span>
-                    <span class="interest-tag">Innovation</span>
-                    <span class="interest-tag">Design</span>
+            <!-- Suggestions de discussions -->
+            <div class="suggestions-container">
+                <h3>Suggestions de conversations</h3>
+                <div id="suggestionsList">
+                    <!-- Les suggestions seront chargées ici dynamiquement -->
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Template de discussion -->
+    <template id="discussionTemplate">
+        <div class="discussion" data-id="">
+            <div class="discussion-avatar"></div>
+            <div class="discussion-info">
+                <div class="discussion-name"></div>
+                <div class="discussion-preview"></div>
+            </div>
+            <div class="discussion-meta">
+                <div class="discussion-time"></div>
+                <div class="unread-count" style="display: none;"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template de message -->
+    <template id="messageTemplate">
+        <div class="message">
+            <div class="message-content"></div>
+            <div class="message-info">
+                <span class="message-time"></span>
+                <span class="message-status"></span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template de suggestion -->
+    <template id="suggestionTemplate">
+        <div class="suggestion-card" data-id="">
+            <div class="suggestion-header">
+                <div class="suggestion-avatar"></div>
+                <div class="suggestion-info">
+                    <div class="suggestion-name"></div>
+                    <div class="suggestion-status"></div>
+                </div>
+            </div>
+            <div class="suggestion-interests">
+                <!-- Les intérêts seront ajoutés ici dynamiquement -->
+            </div>
+        </div>
+    </template>
+
     <script>
-        // Fonctionnalité d'envoi de message
-        const messageInput = document.querySelector('.message-input');
-        const sendButton = document.querySelector('.send-button');
-        const messagesContainer = document.querySelector('.messages-container');
-        
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                // Créer un nouveau message
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'sent');
+        // Gestionnaire d'état de l'application
+        const AppState = {
+            currentUser: null,
+            users: JSON.parse(localStorage.getItem('tellme_users')) || [],
+            conversations: JSON.parse(localStorage.getItem('tellme_conversations')) || [],
+            currentConversation: null,
+            
+            init() {
+                // Vérifier si un utilisateur est déjà connecté
+                const savedUser = localStorage.getItem('tellme_currentUser');
+                if (savedUser) {
+                    this.currentUser = JSON.parse(savedUser);
+                    this.showApp();
+                } else {
+                    this.showAuth();
+                }
                 
-                const now = new Date();
-                const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+                // Initialiser les écouteurs d'événements
+                this.initEventListeners();
                 
-                messageElement.innerHTML = `
-                    <div class="message-content">${messageText}</div>
-                    <div class="message-info">
-                        <span class="message-time">${timeString}</span>
-                        <span class="message-status"><i class="fas fa-check"></i></span>
-                    </div>
+                // Charger les données si un utilisateur est connecté
+                if (this.currentUser) {
+                    this.loadConversations();
+                    this.loadSuggestions();
+                }
+            },
+            
+            initEventListeners() {
+                // Boutons d'authentification
+                document.getElementById('showRegister').addEventListener('click', () => this.showRegisterForm());
+                document.getElementById('showLogin').addEventListener('click', () => this.showLoginForm());
+                document.getElementById('loginSubmit').addEventListener('click', () => this.login());
+                document.getElementById('registerSubmit').addEventListener('click', () => this.register());
+                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+                
+                // Boutons de header
+                document.getElementById('loginBtn').addEventListener('click', () => this.showAuth());
+                document.getElementById('registerBtn').addEventListener('click', () => this.showRegisterForm());
+                document.getElementById('profileBtn').addEventListener('click', () => this.showProfile());
+                
+                // Messagerie
+                document.getElementById('sendMessageBtn').addEventListener('click', () => this.sendMessage());
+                document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                // Nouvelle conversation
+                document.getElementById('newConversationBtn').addEventListener('click', () => this.startNewConversation());
+            },
+            
+            showAuth() {
+                document.getElementById('authPage').classList.add('active');
+                document.getElementById('appPage').classList.remove('active');
+                document.getElementById('headerAuthButtons').style.display = 'flex';
+                document.getElementById('headerUserMenu').style.display = 'none';
+                this.showLoginForm();
+            },
+            
+            showApp() {
+                document.getElementById('authPage').classList.remove('active');
+                document.getElementById('appPage').classList.add('active');
+                document.getElementById('headerAuthButtons').style.display = 'none';
+                document.getElementById('headerUserMenu').style.display = 'flex';
+                document.getElementById('usernameHeader').textContent = this.currentUser.name;
+            },
+            
+            showLoginForm() {
+                document.getElementById('loginForm').style.display = 'flex';
+                document.getElementById('registerForm').style.display = 'none';
+            },
+            
+            showRegisterForm() {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'flex';
+            },
+            
+            showAlert(message, type) {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
                 `;
                 
-                // Ajouter le message à la conversation
-                messagesContainer.appendChild(messageElement);
+                document.body.appendChild(alert);
                 
-                // Effacer le champ de saisie
-                messageInput.value = '';
-                
-                // Faire défiler vers le bas pour voir le nouveau message
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                // Simuler une réponse après un délai
                 setTimeout(() => {
-                    const replies = [
-                        "C'est un point de vue intéressant ! Je n'avais jamais considéré les choses sous cet angle.",
-                        "Je suis tout à fait d'accord avec toi. L'art devrait effectivement être accessible à tous.",
-                        "Tu as raison sur certains points, mais je pense aussi que la complexité fait partie de sa beauté.",
-                        "Merci de partager ton opinion ! Ça ouvre de nouvelles perspectives.",
-                        "J'aimerais en savoir plus sur ta position. Pourrais-tu développer ?"
-                    ];
-                    
-                    const randomReply = replies[Math.floor(Math.random() * replies.length)];
-                    
-                    const replyElement = document.createElement('div');
-                    replyElement.classList.add('message', 'received');
-                    
-                    replyElement.innerHTML = `
-                        <div class="message-content">${randomReply}</div>
-                        <div class="message-info">
-                            <span class="message-time">${timeString}</span>
+                    alert.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    alert.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(alert);
+                    }, 300);
+                }, 3000);
+            },
+            
+            validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            },
+            
+            login() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                let isValid = true;
+                
+                // Réinitialiser les erreurs
+                document.getElementById('loginEmailError').textContent = '';
+                document.getElementById('loginPasswordError').textContent = '';
+                
+                // Validation de l'email
+                if (!email) {
+                    document.getElementById('loginEmailError').textContent = 'L\'email est requis';
+                    isValid = false;
+                } else if (!this.validateEmail(email)) {
+                    document.getElementById('loginEmailError').textContent = 'Format d\'email invalide';
+                    isValid = false;
+                }
+                
+                // Validation du mot de passe
+                if (!password) {
+                    document.getElementById('loginPasswordError').textContent = 'Le mot de passe est requis';
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                // Rechercher l'utilisateur
+                const user = this.users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('tellme_currentUser', JSON.stringify(user));
+                    this.showApp();
+                    this.loadConversations();
+                    this.loadSuggestions();
+                    this.showAlert('Connexion réussie!', 'success');
+                } else {
+                    this.showAlert('Email ou mot de passe incorrect', 'error');
+                }
+            },
+            
+            register() {
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+                let isValid = true;
+                
+                // Réinitialiser les erreurs
+                document.getElementById('registerNameError').textContent = '';
+                document.getElementById('registerEmailError').textContent = '';
+                document.getElementById('registerPasswordError').textContent = '';
+                document.getElementById('registerPasswordConfirmError').textContent = '';
+                
+                // Validation du nom
+                if (!name) {
+                    document.getElementById('registerNameError').textContent = 'Le nom est requis';
+                    isValid = false;
+                }
+                
+                // Validation de l'email
+                if (!email) {
+                    document.getElementById('registerEmailError').textContent = 'L\'email est requis';
+                    isValid = false;
+                } else if (!this.validateEmail(email)) {
+                    document.getElementById('registerEmailError').textContent = 'Format d\'email invalide';
+                    isValid = false;
+                } else if (this.users.find(u => u.email === email)) {
+                    document.getElementById('registerEmailError').textContent = 'Cet email est déjà utilisé';
+                    isValid = false;
+                }
+                
+                // Validation du mot de passe
+                if (!password) {
+                    document.getElementById('registerPasswordError').textContent = 'Le mot de passe est requis';
+                    isValid = false;
+                } else if (password.length < 6) {
+                    document.getElementById('registerPasswordError').textContent = 'Le mot de passe doit contenir au moins 6 caractères';
+                    isValid = false;
+                }
+                
+                // Validation de la confirmation du mot de passe
+                if (password !== passwordConfirm) {
+                    document.getElementById('registerPasswordConfirmError').textContent = 'Les mots de passe ne correspondent pas';
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                // Créer le nouvel utilisateur
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password,
+                    avatar: name.substring(0, 2).toUpperCase(),
+                    interests: ['Technologie', 'Musique', 'Sport'],
+                    joined: new Date().toISOString()
+                };
+                
+                this.users.push(newUser);
+                this.currentUser = newUser;
+                
+                // Sauvegarder dans le localStorage
+                localStorage.setItem('tellme_users', JSON.stringify(this.users));
+                localStorage.setItem('tellme_currentUser', JSON.stringify(newUser));
+                
+                this.showApp();
+                this.loadSuggestions();
+                this.showAlert('Compte créé avec succès!', 'success');
+            },
+            
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('tellme_currentUser');
+                this.showAuth();
+                this.showAlert('Vous avez été déconnecté', 'success');
+            },
+            
+            loadConversations() {
+                const discussionList = document.getElementById('discussionList');
+                discussionList.innerHTML = '';
+                
+                // Filtrer les conversations de l'utilisateur actuel
+                const userConversations = this.conversations.filter(conv => 
+                    conv.participants.includes(this.currentUser.id)
+                );
+                
+                if (userConversations.length === 0) {
+                    discussionList.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #65676b;">
+                            <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Vous n'avez pas encore de conversations</p>
                         </div>
                     `;
-                    
-                    messagesContainer.appendChild(replyElement);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    
-                    // Mettre à jour le statut du message
-                    setTimeout(() => {
-                        messageElement.querySelector('.message-status').innerHTML = '<i class="fas fa-check-double"></i>';
-                    }, 1000);
-                }, 1500);
-            }
-        }
-        
-        // Événements pour l'envoi de message
-        sendButton.addEventListener('click', sendMessage);
-        
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        
-        // Sélectionner une discussion
-        const discussions = document.querySelectorAll('.discussion');
-        const currentDiscussion = document.querySelector('.current-discussion');
-        
-        discussions.forEach(discussion => {
-            discussion.addEventListener('click', () => {
-                // Retirer la classe active de toutes les discussions
-                discussions.forEach(d => d.classList.remove('active'));
-                
-                // Ajouter la classe active à la discussion cliquée
-                discussion.classList.add('active');
-                
-                // Mettre à jour la discussion actuelle dans l'en-tête de chat
-                const discussionAvatar = discussion.querySelector('.discussion-avatar').innerHTML;
-                const discussionName = discussion.querySelector('.discussion-name').innerHTML;
-                
-                currentDiscussion.innerHTML = `
-                    <div class="discussion-avatar">${discussionAvatar}</div>
-                    <div class="discussion-info">
-                        <div class="discussion-name">${discussionName}</div>
-                        <div class="discussion-status">En ligne</div>
-                    </div>
-                `;
-                
-                // Réinitialiser le compteur de messages non lus
-                const unreadCount = discussion.querySelector('.unread-count');
-                if (unreadCount) {
-                    unreadCount.remove();
+                    return;
                 }
-            });
-        });
+                
+                // Trier les conversations par date du dernier message
+                userConversations.sort((a, b) => {
+                    const lastMessageA = a.messages[a.messages.length - 1];
+                    const lastMessageB = b.messages[b.messages.length - 1];
+                    return new Date(lastMessageB.timestamp) - new Date(lastMessageA.timestamp);
+                });
+                
+                // Afficher chaque conversation
+                userConversations.forEach(conversation => {
+                    const otherParticipantId = conversation.participants.find(id => id !== this.currentUser.id);
+                    const otherUser = this.users.find(u => u.id === otherParticipantId);
+                    
+                    if (!otherUser) return;
+                    
+                    const lastMessage = conversation.messages[conversation.messages.length - 1];
+                    const unreadCount = conversation.messages.filter(msg => 
+                        msg.sender !== this.currentUser.id && !msg.read
+                    ).length;
+                    
+                    const discussionEl = document.getElementById('discussionTemplate').content.cloneNode(true);
+                    discussionEl.querySelector('.discussion').dataset.id = conversation.id;
+                    discussionEl.querySelector('.discussion-avatar').textContent = otherUser.avatar;
+                    discussionEl.querySelector('.discussion-name').textContent = otherUser.name;
+                    discussionEl.querySelector('.discussion-preview').textContent = lastMessage.content;
+                    
+                    const time = new Date(lastMessage.timestamp);
+                    discussionEl.querySelector('.discussion-time').textContent = this.formatTime(time);
+                    
+                    if (unreadCount > 0) {
+                        discussionEl.querySelector('.unread-count').style.display = 'inline-block';
+                        discussionEl.querySelector('.unread-count').textContent = unreadCount;
+                    }
+                    
+                    discussionEl.querySelector('.discussion').addEventListener('click', () => {
+                        this.openConversation(conversation.id);
+                    });
+                    
+                    discussionList.appendChild(discussionEl);
+                });
+            },
+            
+            loadSuggestions() {
+                const suggestionsList = document.getElementById('suggestionsList');
+                suggestionsList.innerHTML = '';
+                
+                // Filtrer les utilisateurs qui ne sont pas l'utilisateur actuel
+                const otherUsers = this.users.filter(user => user.id !== this.currentUser.id);
+                
+                if (otherUsers.length === 0) {
+                    suggestionsList.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #65676b;">
+                            <i class="fas fa-user-friends" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Aucun autre utilisateur pour le moment</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Afficher chaque suggestion
+                otherUsers.forEach(user => {
+                    const suggestionEl = document.getElementById('suggestionTemplate').content.cloneNode(true);
+                    suggestionEl.querySelector('.suggestion-card').dataset.id = user.id;
+                    suggestionEl.querySelector('.suggestion-avatar').textContent = user.avatar;
+                    suggestionEl.querySelector('.suggestion-name').textContent = user.name;
+                    suggestionEl.querySelector('.suggestion-status').textContent = 'En ligne';
+                    
+                    // Ajouter les intérêts
+                    const interestsContainer = suggestionEl.querySelector('.suggestion-interests');
+                    user.interests.slice(0, 3).forEach(interest => {
+                        const interestEl = document.createElement('span');
+                        interestEl.className = 'interest-tag';
+                        interestEl.textContent = interest;
+                        interestsContainer.appendChild(interestEl);
+                    });
+                    
+                    suggestionEl.querySelector('.suggestion-card').addEventListener('click', () => {
+                        this.startConversationWith(user.id);
+                    });
+                    
+                    suggestionsList.appendChild(suggestionEl);
+                });
+            },
+            
+            openConversation(conversationId) {
+                const conversation = this.conversations.find(conv => conv.id === conversationId);
+                if (!conversation) return;
+                
+                this.currentConversation = conversation;
+                
+                // Marquer les messages comme lus
+                conversation.messages.forEach(msg => {
+                    if (msg.sender !== this.currentUser.id) {
+                        msg.read = true;
+                    }
+                });
+                
+                // Sauvegarder les modifications
+                localStorage.setItem('tellme_conversations', JSON.stringify(this.conversations));
+                
+                // Mettre à jour l'affichage
+                this.loadConversations();
+                this.renderConversation(conversation);
+            },
+            
+            renderConversation(conversation) {
+                const messagesContainer = document.getElementById('messagesContainer');
+                messagesContainer.innerHTML = '';
+                
+                const otherParticipantId = conversation.participants.find(id => id !== this.currentUser.id);
+                const otherUser = this.users.find(u => u.id === otherParticipantId);
+                
+                if (!otherUser) return;
+                
+                // Mettre à jour l'en-tête de la conversation
+                document.getElementById('currentAvatar').textContent = otherUser.avatar;
+                document.getElementById('currentName').textContent = otherUser.name;
+                document.getElementById('currentDiscussion').querySelector('.discussion-status').textContent = 'En ligne';
+                
+                // Afficher les messages
+                conversation.messages.forEach(message => {
+                    const isSent = message.sender === this.currentUser.id;
+                    const messageEl = document.getElementById('messageTemplate').content.cloneNode(true);
+                    
+                    messageEl.querySelector('.message').classList.add(isSent ? 'sent' : 'received');
+                    messageEl.querySelector('.message-content').textContent = message.content;
+                    
+                    const time = new Date(message.timestamp);
+                    messageEl.querySelector('.message-time').textContent = this.formatTime(time);
+                    
+                    if (isSent) {
+                        messageEl.querySelector('.message-status').innerHTML = message.read ? 
+                            '<i class="fas fa-check-double"></i>' : '<i class="fas fa-check"></i>';
+                    }
+                    
+                    messagesContainer.appendChild(messageEl);
+                });
+                
+                // Faire défiler vers le bas
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            },
+            
+            sendMessage() {
+                const input = document.getElementById('messageInput');
+                const content = input.value.trim();
+                
+                if (!content || !this.currentConversation) return;
+                
+                // Créer le nouveau message
+                const newMessage = {
+                    id: Date.now().toString(),
+                    sender: this.currentUser.id,
+                    content,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                
+                // Ajouter le message à la conversation
+                this.currentConversation.messages.push(newMessage);
+                
+                // Sauvegarder les modifications
+                localStorage.setItem('tellme_conversations', JSON.stringify(this.conversations));
+                
+                // Mettre à jour l'affichage
+                this.renderConversation(this.currentConversation);
+                this.loadConversations();
+                
+                // Réinitialiser l'input
+                input.value = '';
+            },
+            
+            startConversationWith(userId) {
+                const otherUser = this.users.find(u => u.id === userId);
+                if (!otherUser) return;
+                
+                // Vérifier si une conversation existe déjà
+                let conversation = this.conversations.find(conv => 
+                    conv.participants.includes(this.currentUser.id) && 
+                    conv.participants.includes(otherUser.id)
+                );
+                
+                if (!conversation) {
+                    // Créer une nouvelle conversation
+                    conversation = {
+                        id: Date.now().toString(),
+                        participants: [this.currentUser.id, otherUser.id],
+                        messages: [
+                            {
+                                id: Date.now().toString(),
+                                sender: this.currentUser.id,
+                                content: `Bonjour ${otherUser.name}! J'aimerais discuter avec vous.`,
+                                timestamp: new Date().toISOString(),
+                                read: false
+                            }
+                        ]
+                    };
+                    
+                    this.conversations.push(conversation);
+                    localStorage.setItem('tellme_conversations', JSON.stringify(this.conversations));
+                }
+                
+                // Ouvrir la conversation
+                this.openConversation(conversation.id);
+            },
+            
+            startNewConversation() {
+                // Pour cet exemple, on commence une conversation avec le premier utilisateur disponible
+                const otherUsers = this.users.filter(user => user.id !== this.currentUser.id);
+                if (otherUsers.length > 0) {
+                    this.startConversationWith(otherUsers[0].id);
+                } else {
+                    this.showAlert('Aucun autre utilisateur disponible', 'error');
+                }
+            },
+            
+            formatTime(date) {
+                const now = new Date();
+                const diff = now - date;
+                
+                if (diff < 60000) { // Moins d'une minute
+                    return 'À l\'instant';
+                } else if (diff < 3600000) { // Moins d'une heure
+                    return `${Math.floor(diff / 60000)} min`;
+                } else if (diff < 86400000) { // Moins d'un jour
+                    return `${Math.floor(diff / 3600000)} h`;
+                } else if (diff < 604800000) { // Moins d'une semaine
+                    return `${Math.floor(diff / 86400000)} j`;
+                } else {
+                    return date.toLocaleDateString();
+                }
+            },
+            
+            showProfile() {
+                // Pour cet exemple, afficher simplement une alerte
+                this.showAlert(`Profil de ${this.currentUser.name} (${this.currentUser.email})`, 'success');
+            }
+        };
         
-        // Faire défiler les messages vers le bas au chargement
-        window.addEventListener('load', () => {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
-        
-        // Animation de chargement des messages
-        const messages = document.querySelectorAll('.message');
-        messages.forEach((message, index) => {
-            message.style.animationDelay = `${index * 0.1}s`;
+        // Initialiser l'application au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            AppState.init();
+            
+            // Ajouter quelques utilisateurs par défaut si nécessaire
+            if (AppState.users.length === 0) {
+                const defaultUsers = [
+                    {
+                        id: '1',
+                        name: 'Marie Smith',
+                        email: 'marie@example.com',
+                        password: 'password123',
+                        avatar: 'MS',
+                        interests: ['Art', 'Photographie', 'Voyage'],
+                        joined: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        name: 'Pierre Dubois',
+                        email: 'pierre@example.com',
+                        password: 'password123',
+                        avatar: 'PD',
+                        interests: ['Sport', 'Cinéma', 'Cuisine'],
+                        joined: new Date().toISOString()
+                    },
+                    {
+                        id: '3',
+                        name: 'Emma Johnson',
+                        email: 'emma@example.com',
+                        password: 'password123',
+                        avatar: 'EJ',
+                        interests: ['Littérature', 'Musique', 'Nature'],
+                        joined: new Date().toISOString()
+                    }
+                ];
+                
+                AppState.users = defaultUsers;
+                localStorage.setItem('tellme_users', JSON.stringify(defaultUsers));
+            }
+            
+            // Ajouter quelques conversations par défaut si nécessaire
+            if (AppState.conversations.length === 0 && AppState.users.length >= 2) {
+                const defaultConversations = [
+                    {
+                        id: '1',
+                        participants: [AppState.users[0].id, AppState.users[1].id],
+                        messages: [
+                            {
+                                id: '1',
+                                sender: AppState.users[0].id,
+                                content: 'Salut Pierre! Comment vas-tu?',
+                                timestamp: new Date(Date.now() - 86400000).toISOString(),
+                                read: true
+                            },
+                            {
+                                id: '2',
+                                sender: AppState.users[1].id,
+                                content: 'Bonjour Marie! Je vais bien, merci. Et toi?',
+                                timestamp: new Date(Date.now() - 86300000).toISOString(),
+                                read: true
+                            },
+                            {
+                                id: '3',
+                                sender: AppState.users[0].id,
+                                content: 'Très bien aussi. As-tu visité la nouvelle exposition au musée?',
+                                timestamp: new Date(Date.now() - 86200000).toISOString(),
+                                read: true
+                            }
+                        ]
+                    }
+                ];
+                
+                AppState.conversations = defaultConversations;
+                localStorage.setItem('tellme_conversations', JSON.stringify(defaultConversations));
+            }
         });
     </script>
 </body>
