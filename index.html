@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messagerie Instantanée</title>
+    <title>Tell Me - Plateforme d'échange libre</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles généraux */
+        /* Reset et styles de base */
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +15,8 @@
         }
         
         body {
-            background-color: #f5f5f5;
+            background-color: #f0f2f5;
+            color: #1c1e21;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -22,36 +24,59 @@
         
         /* En-tête */
         header {
-            background-color: #4e8cff;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
-            padding: 15px 20px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
         }
         
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #fff;
-            color: #4e8cff;
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .user-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: #6a11cb;
+        }
+        
+        .btn-primary:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         /* Contenu principal */
@@ -59,86 +84,182 @@
             display: flex;
             flex: 1;
             overflow: hidden;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
         }
         
-        /* Liste des contacts */
-        .contacts-container {
-            width: 300px;
+        /* Navigation latérale */
+        .sidebar {
+            width: 260px;
             background-color: white;
-            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-section {
+            padding: 20px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+        
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #6a11cb;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: #eef3ff;
+            color: #6a11cb;
+            font-weight: 500;
+        }
+        
+        .sidebar-menu i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+        
+        /* Liste des discussions */
+        .discussions-container {
+            width: 350px;
+            background-color: white;
+            border-right: 1px solid #e4e6eb;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
         
-        .contacts-header {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            font-weight: bold;
+        .discussions-header {
+            padding: 20px;
+            border-bottom: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .discussions-title {
+            font-size: 1.4rem;
+            font-weight: 600;
         }
         
         .search-container {
-            padding: 10px 15px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e4e6eb;
         }
         
-        .search-container input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e0e0e0;
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
             border-radius: 20px;
-            outline: none;
+            padding: 8px 15px;
         }
         
-        .contact-list {
+        .search-box i {
+            color: #65676b;
+            margin-right: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .discussion-list {
             flex: 1;
             overflow-y: auto;
         }
         
-        .contact {
+        .discussion {
             display: flex;
             align-items: center;
-            padding: 12px 15px;
+            padding: 15px 20px;
             cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f2f5;
         }
         
-        .contact:hover {
-            background-color: #f9f9f9;
+        .discussion:hover {
+            background-color: #f5f7fa;
         }
         
-        .contact.active {
-            background-color: #edf4ff;
+        .discussion.active {
+            background-color: #eef3ff;
         }
         
-        .contact-avatar {
-            width: 45px;
-            height: 45px;
+        .discussion-avatar {
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background-color: #e0e0e0;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
+            margin-right: 15px;
             font-weight: bold;
-            color: #555;
+            color: white;
+            font-size: 1.2rem;
         }
         
-        .contact-info {
+        .discussion-info {
             flex: 1;
         }
         
-        .contact-name {
-            font-weight: 500;
+        .discussion-name {
+            font-weight: 600;
+            margin-bottom: 5px;
         }
         
-        .contact-lastmsg {
-            font-size: 0.8rem;
-            color: #777;
+        .discussion-preview {
+            font-size: 0.9rem;
+            color: #65676b;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 180px;
+            max-width: 200px;
+        }
+        
+        .discussion-meta {
+            text-align: right;
+        }
+        
+        .discussion-time {
+            font-size: 0.8rem;
+            color: #65676b;
+            margin-bottom: 5px;
+        }
+        
+        .unread-count {
+            display: inline-block;
+            background-color: #6a11cb;
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 10px;
         }
         
         /* Zone de conversation */
@@ -146,34 +267,61 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            background-color: #f0f2f5;
         }
         
         .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e4e6eb;
             background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .current-discussion {
             display: flex;
             align-items: center;
         }
         
-        .current-contact {
-            display: flex;
-            align-items: center;
-            flex: 1;
+        .discussion-status {
+            font-size: 0.9rem;
+            color: #65676b;
+            margin-top: 3px;
+        }
+        
+        .chat-actions button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #65676b;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+        
+        .chat-actions button:hover {
+            color: #6a11cb;
         }
         
         .messages-container {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
-            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
         }
         
         .message {
             max-width: 70%;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .message.sent {
@@ -186,69 +334,199 @@
         }
         
         .message-content {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border-radius: 18px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
         
         .message.sent .message-content {
-            background-color: #4e8cff;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
+            border-bottom-right-radius: 5px;
         }
         
         .message.received .message-content {
             background-color: white;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e4e6eb;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-info {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #65676b;
         }
         
         .message-time {
-            font-size: 0.7rem;
-            color: #777;
+            margin: 0 8px;
+        }
+        
+        .message-status {
+            color: #6a11cb;
         }
         
         .message-input-container {
-            padding: 15px 20px;
+            padding: 20px 25px;
             background-color: white;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #e4e6eb;
             display: flex;
             align-items: center;
         }
         
         .message-input {
             flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
+            padding: 12px 18px;
+            border: 1px solid #e4e6eb;
+            border-radius: 24px;
             outline: none;
             resize: none;
-            max-height: 100px;
+            max-height: 120px;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .message-input:focus {
+            border-color: #6a11cb;
+        }
+        
+        .attachment-button {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: #65676b;
+            cursor: pointer;
+            margin: 0 15px;
         }
         
         .send-button {
-            margin-left: 10px;
-            background-color: #4e8cff;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.4rem;
+            transition: transform 0.2s;
+        }
+        
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Suggestions de discussions */
+        .suggestions-container {
+            width: 300px;
+            background-color: white;
+            border-left: 1px solid #e4e6eb;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .suggestion-card {
+            background-color: #f5f7fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .suggestion-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .suggestion-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .suggestion-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .suggestion-name {
+            font-weight: 600;
+        }
+        
+        .suggestion-interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .interest-tag {
+            background-color: #eef3ff;
+            color: #6a11cb;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
-            .contacts-container {
+        @media (max-width: 1200px) {
+            .suggestions-container {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
                 width: 80px;
             }
             
-            .contact-info {
+            .sidebar-section span {
                 display: none;
             }
             
-            .contact-avatar {
+            .sidebar-menu li {
+                justify-content: center;
+            }
+            
+            .sidebar-menu i {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .discussions-container {
+                width: 70px;
+            }
+            
+            .discussion-info, .discussion-meta, .discussions-title {
+                display: none;
+            }
+            
+            .discussions-header {
+                justify-content: center;
+            }
+            
+            .search-container {
+                display: none;
+            }
+            
+            .discussion {
+                justify-content: center;
+            }
+            
+            .discussion-avatar {
                 margin-right: 0;
             }
         }
@@ -257,48 +535,132 @@
 <body>
     <!-- En-tête -->
     <header>
-        <div class="logo">Messagerie</div>
-        <div class="user-info">
-            <span>Jean Dupont</span>
-            <div class="avatar">JD</div>
+        <div class="logo">
+            <i class="fas fa-comments"></i>
+            <span>Tell Me</span>
+        </div>
+        <div class="user-actions">
+            <button class="btn btn-outline"><i class="fas fa-compass"></i> Découvrir</button>
+            <button class="btn btn-outline"><i class="fas fa-bell"></i></button>
+            <button class="btn btn-primary"><i class="fas fa-user"></i> Mon profil</button>
         </div>
     </header>
     
     <!-- Contenu principal -->
     <div class="main-container">
-        <!-- Liste des contacts -->
-        <div class="contacts-container">
-            <div class="contacts-header">Contacts</div>
-            <div class="search-container">
-                <input type="text" placeholder="Rechercher...">
+        <!-- Navigation latérale -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <ul class="sidebar-menu">
+                    <li class="active"><i class="fas fa-comment-dots"></i> <span>Messages</span></li>
+                    <li><i class="fas fa-users"></i> <span>Groupes</span></li>
+                    <li><i class="fas fa-star"></i> <span>Favoris</span></li>
+                    <li><i class="fas fa-hashtag"></i> <span>Thématiques</span></li>
+                </ul>
             </div>
-            <div class="contact-list">
-                <div class="contact active">
-                    <div class="contact-avatar">MS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Marie Smith</div>
-                        <div class="contact-lastmsg">Salut, comment vas-tu ?</div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">THÉMATIES</div>
+                <ul class="sidebar-menu">
+                    <li><i class="fas fa-music"></i> <span>Musique</span></li>
+                    <li><i class="fas fa-basketball-ball"></i> <span>Sports</span></li>
+                    <li><i class="fas fa-film"></i> <span>Cinéma</span></li>
+                    <li><i class="fas fa-book"></i> <span>Littérature</span></li>
+                    <li><i class="fas fa-laptop-code"></i> <span>Technologie</span></li>
+                    <li><i class="fas fa-plus"></i> <span>Voir plus</span></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">PARAMÈTRES</div>
+                <ul class="sidebar-menu">
+                    <li><i class="fas fa-cog"></i> <span>Paramètres</span></li>
+                    <li><i class="fas fa-moon"></i> <span>Apparence</span></li>
+                    <li><i class="fas fa-question-circle"></i> <span>Aide</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Liste des discussions -->
+        <div class="discussions-container">
+            <div class="discussions-header">
+                <div class="discussions-title">Messages</div>
+                <button class="btn btn-primary"><i class="fas fa-edit"></i> Nouveau</button>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Rechercher une discussion...">
+                </div>
+            </div>
+            
+            <div class="discussion-list">
+                <div class="discussion active">
+                    <div class="discussion-avatar">MS</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Marie Smith</div>
+                        <div class="discussion-preview">Je pense que l'art contemporain représente parfaitement notre époque</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">10:42</div>
+                        <div class="unread-count">3</div>
                     </div>
                 </div>
-                <div class="contact">
-                    <div class="contact-avatar">PD</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Pierre Dubois</div>
-                        <div class="contact-lastmsg">À demain pour la réunion !</div>
+                
+                <div class="discussion">
+                    <div class="discussion-avatar">PD</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Pierre Dubois</div>
+                        <div class="discussion-preview">As-tu regardé le dernier match ? Quelle performance incroyable !</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">Hier</div>
                     </div>
                 </div>
-                <div class="contact">
-                    <div class="contact-avatar">EJ</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Emma Johnson</div>
-                        <div class="contact-lastmsg">Merci pour ton aide !</div>
+                
+                <div class="discussion">
+                    <div class="discussion-avatar">EJ</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Emma Johnson</div>
+                        <div class="discussion-preview">J'ai adoré ton analyse sur ce livre, on devrait en discuter plus longuement</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">Lun.</div>
                     </div>
                 </div>
-                <div class="contact">
-                    <div class="contact-avatar">TM</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Thomas Martin</div>
-                        <div class="contact-lastmsg">Tu as vu le dernier film ?</div>
+                
+                <div class="discussion">
+                    <div class="discussion-avatar">TM</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Thomas Martin</div>
+                        <div class="discussion-preview">Tu as raison, la technologie devrait être plus accessible à tous</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">Dim.</div>
+                        <div class="unread-count">1</div>
+                    </div>
+                </div>
+                
+                <div class="discussion">
+                    <div class="discussion-avatar">LC</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Lucie Chen</div>
+                        <div class="discussion-preview">Merci pour tes recommandations musicales, j'adore cette découverte !</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">Sam.</div>
+                    </div>
+                </div>
+                
+                <div class="discussion">
+                    <div class="discussion-avatar">AG</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Antoine Garcia</div>
+                        <div class="discussion-preview">Ton point de vue sur la politique environnementale m'a vraiment fait réfléchir</div>
+                    </div>
+                    <div class="discussion-meta">
+                        <div class="discussion-time">Ven.</div>
                     </div>
                 </div>
             </div>
@@ -307,50 +669,140 @@
         <!-- Zone de conversation -->
         <div class="chat-container">
             <div class="chat-header">
-                <div class="current-contact">
-                    <div class="contact-avatar">MS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Marie Smith</div>
-                        <div class="contact-lastmsg">En ligne</div>
+                <div class="current-discussion">
+                    <div class="discussion-avatar">MS</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">Marie Smith</div>
+                        <div class="discussion-status">En ligne</div>
                     </div>
+                </div>
+                <div class="chat-actions">
+                    <button><i class="fas fa-phone"></i></button>
+                    <button><i class="fas fa-video"></i></button>
+                    <button><i class="fas fa-info-circle"></i></button>
                 </div>
             </div>
             
             <div class="messages-container">
                 <div class="message received">
-                    <div class="message-content">Salut Jean, comment vas-tu ?</div>
-                    <div class="message-time">10:05</div>
+                    <div class="message-content">Salut Jean ! J'ai visité une exposition d'art contemporain hier, c'était fascinant !</div>
+                    <div class="message-info">
+                        <span class="message-time">10:30</span>
+                    </div>
                 </div>
                 
                 <div class="message sent">
-                    <div class="message-content">Salut Marie ! Je vais bien, merci. Et toi ?</div>
-                    <div class="message-time">10:07</div>
+                    <div class="message-content">Bonjour Marie ! Raconte-moi, qu'est-ce qui t'a particulièrement marquée ?</div>
+                    <div class="message-info">
+                        <span class="message-time">10:32</span>
+                        <span class="message-status"><i class="fas fa-check-double"></i></span>
+                    </div>
                 </div>
                 
                 <div class="message received">
-                    <div class="message-content">Très bien aussi. Tu as terminé le projet sur lequel tu travaillais ?</div>
-                    <div class="message-time">10:08</div>
+                    <div class="message-content">Il y avait cette installation qui mêlait lumière et son, créant une atmosphère vraiment immersive. Je pense que l'art contemporain arrive à capturer l'essence de notre époque comme aucun autre mouvement avant.</div>
+                    <div class="message-info">
+                        <span class="message-time">10:35</span>
+                    </div>
                 </div>
                 
                 <div class="message sent">
-                    <div class="message-content">Oui, je l'ai finalisé hier. C'était assez intense mais le résultat est satisfaisant.</div>
-                    <div class="message-time">10:10</div>
+                    <div class="message-content">C'est intéressant ! Mais parfois je me demande si certaines œuvres ne sont pas trop conceptuelles, au point de perdre le public. Qu'en penses-tu ?</div>
+                    <div class="message-info">
+                        <span class="message-time">10:38</span>
+                        <span class="message-status"><i class="fas fa-check-double"></i></span>
+                    </div>
                 </div>
                 
                 <div class="message received">
-                    <div class="message-content">Félicitations ! J'ai hâte de voir le résultat.</div>
-                    <div class="message-time">10:12</div>
+                    <div class="message-content">Je comprends ton point de vue. Mais je crois que l'art n'a pas toujours besoin d'être immédiatement compréhensible. Parfois, c'est justement dans la réflexion et l'incompréhension initiale que réside la beauté de l'œuvre.</div>
+                    <div class="message-info">
+                        <span class="message-time">10:40</span>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-content">Tu as raison. Peut-être que je devrais aborder ces œuvres avec plus d'ouverture d'esprit. As-tu des artistes contemporains à me recommander pour commencer ?</div>
+                    <div class="message-info">
+                        <span class="message-time">10:42</span>
+                        <span class="message-status"><i class="fas fa-check"></i></span>
+                    </div>
                 </div>
             </div>
             
             <div class="message-input-container">
                 <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
-                <button class="send-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                <button class="attachment-button">
+                    <i class="fas fa-paperclip"></i>
                 </button>
+                <button class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Suggestions de discussions -->
+        <div class="suggestions-container">
+            <h3>Suggestions de conversations</h3>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-header">
+                    <div class="suggestion-avatar">SD</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Sophie Dupont</div>
+                        <div class="suggestion-status">En ligne</div>
+                    </div>
+                </div>
+                <div class="suggestion-interests">
+                    <span class="interest-tag">Photographie</span>
+                    <span class="interest-tag">Voyage</span>
+                    <span class="interest-tag">Nature</span>
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-header">
+                    <div class="suggestion-avatar">ML</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Michel Lambert</div>
+                        <div class="suggestion-status">En ligne</div>
+                    </div>
+                </div>
+                <div class="suggestion-interests">
+                    <span class="interest-tag">Science</span>
+                    <span class="interest-tag">Histoire</span>
+                    <span class="interest-tag">Philosophie</span>
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-header">
+                    <div class="suggestion-avatar">CJ</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Clara Jones</div>
+                        <div class="suggestion-status">Hors ligne</div>
+                    </div>
+                </div>
+                <div class="suggestion-interests">
+                    <span class="interest-tag">Musique</span>
+                    <span class="interest-tag">Écriture</span>
+                    <span class="interest-tag">Théâtre</span>
+                </div>
+            </div>
+            
+            <div class="suggestion-card">
+                <div class="suggestion-header">
+                    <div class="suggestion-avatar">RB</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Robert Brown</div>
+                        <div class="suggestion-status">En ligne</div>
+                    </div>
+                </div>
+                <div class="suggestion-interests">
+                    <span class="interest-tag">Technologie</span>
+                    <span class="interest-tag">Innovation</span>
+                    <span class="interest-tag">Design</span>
+                </div>
             </div>
         </div>
     </div>
@@ -373,7 +825,10 @@
                 
                 messageElement.innerHTML = `
                     <div class="message-content">${messageText}</div>
-                    <div class="message-time">${timeString}</div>
+                    <div class="message-info">
+                        <span class="message-time">${timeString}</span>
+                        <span class="message-status"><i class="fas fa-check"></i></span>
+                    </div>
                 `;
                 
                 // Ajouter le message à la conversation
@@ -387,17 +842,34 @@
                 
                 // Simuler une réponse après un délai
                 setTimeout(() => {
+                    const replies = [
+                        "C'est un point de vue intéressant ! Je n'avais jamais considéré les choses sous cet angle.",
+                        "Je suis tout à fait d'accord avec toi. L'art devrait effectivement être accessible à tous.",
+                        "Tu as raison sur certains points, mais je pense aussi que la complexité fait partie de sa beauté.",
+                        "Merci de partager ton opinion ! Ça ouvre de nouvelles perspectives.",
+                        "J'aimerais en savoir plus sur ta position. Pourrais-tu développer ?"
+                    ];
+                    
+                    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                    
                     const replyElement = document.createElement('div');
                     replyElement.classList.add('message', 'received');
                     
                     replyElement.innerHTML = `
-                        <div class="message-content">Merci pour votre message ! Je vous répondrai dès que possible.</div>
-                        <div class="message-time">${timeString}</div>
+                        <div class="message-content">${randomReply}</div>
+                        <div class="message-info">
+                            <span class="message-time">${timeString}</span>
+                        </div>
                     `;
                     
                     messagesContainer.appendChild(replyElement);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 1000);
+                    
+                    // Mettre à jour le statut du message
+                    setTimeout(() => {
+                        messageElement.querySelector('.message-status').innerHTML = '<i class="fas fa-check-double"></i>';
+                    }, 1000);
+                }, 1500);
             }
         }
         
@@ -411,36 +883,47 @@
             }
         });
         
-        // Sélectionner un contact
-        const contacts = document.querySelectorAll('.contact');
-        const currentContact = document.querySelector('.current-contact');
-        const chatHeader = document.querySelector('.chat-header');
+        // Sélectionner une discussion
+        const discussions = document.querySelectorAll('.discussion');
+        const currentDiscussion = document.querySelector('.current-discussion');
         
-        contacts.forEach(contact => {
-            contact.addEventListener('click', () => {
-                // Retirer la classe active de tous les contacts
-                contacts.forEach(c => c.classList.remove('active'));
+        discussions.forEach(discussion => {
+            discussion.addEventListener('click', () => {
+                // Retirer la classe active de toutes les discussions
+                discussions.forEach(d => d.classList.remove('active'));
                 
-                // Ajouter la classe active au contact cliqué
-                contact.classList.add('active');
+                // Ajouter la classe active à la discussion cliquée
+                discussion.classList.add('active');
                 
-                // Mettre à jour le contact actuel dans l'en-tête de chat
-                const contactAvatar = contact.querySelector('.contact-avatar').innerHTML;
-                const contactName = contact.querySelector('.contact-name').innerHTML;
+                // Mettre à jour la discussion actuelle dans l'en-tête de chat
+                const discussionAvatar = discussion.querySelector('.discussion-avatar').innerHTML;
+                const discussionName = discussion.querySelector('.discussion-name').innerHTML;
                 
-                currentContact.innerHTML = `
-                    <div class="contact-avatar">${contactAvatar}</div>
-                    <div class="contact-info">
-                        <div class="contact-name">${contactName}</div>
-                        <div class="contact-lastmsg">En ligne</div>
+                currentDiscussion.innerHTML = `
+                    <div class="discussion-avatar">${discussionAvatar}</div>
+                    <div class="discussion-info">
+                        <div class="discussion-name">${discussionName}</div>
+                        <div class="discussion-status">En ligne</div>
                     </div>
                 `;
+                
+                // Réinitialiser le compteur de messages non lus
+                const unreadCount = discussion.querySelector('.unread-count');
+                if (unreadCount) {
+                    unreadCount.remove();
+                }
             });
         });
         
         // Faire défiler les messages vers le bas au chargement
         window.addEventListener('load', () => {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+        
+        // Animation de chargement des messages
+        const messages = document.querySelectorAll('.message');
+        messages.forEach((message, index) => {
+            message.style.animationDelay = `${index * 0.1}s`;
         });
     </script>
 </body>
