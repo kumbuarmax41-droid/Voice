@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convertisseur Texte en Parole</title>
+    <title>Messagerie Instantanée</title>
     <style>
+        /* Styles généraux */
         * {
             margin: 0;
             padding: 0;
@@ -13,349 +14,436 @@
         }
         
         body {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f5f5f5;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
         
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        
+        /* En-tête */
         header {
-            background: linear-gradient(90deg, #3498db, #2ecc71);
+            background-color: #4e8cff;
             color: white;
-            padding: 25px;
-            text-align: center;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .main-content {
-            padding: 30px;
-        }
-        
-        .text-input {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
+        .logo {
+            font-size: 1.5rem;
             font-weight: bold;
-            font-size: 1.1rem;
-            color: #2c3e50;
         }
         
-        textarea {
-            width: 100%;
-            min-height: 200px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #4e8cff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Contenu principal */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Liste des contacts */
+        .contacts-container {
+            width: 300px;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .contacts-header {
             padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            resize: vertical;
-            transition: border-color 0.3s;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
         }
         
-        textarea:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        .search-container {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
         }
         
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .control-group {
-            margin-bottom: 15px;
-        }
-        
-        select, input {
+        .search-container input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .contact {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .contact:hover {
             background-color: #f9f9f9;
         }
         
-        .buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+        .contact.active {
+            background-color: #edf4ff;
         }
         
-        button {
-            padding: 14px 28px;
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+        }
+        
+        .contact-lastmsg {
+            font-size: 0.8rem;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        
+        /* Zone de conversation */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .current-contact {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message.sent {
+            align-items: flex-end;
+            margin-left: auto;
+        }
+        
+        .message.received {
+            align-items: flex-start;
+        }
+        
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .message.sent .message-content {
+            background-color: #4e8cff;
+            color: white;
+        }
+        
+        .message.received .message-content {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #777;
+        }
+        
+        .message-input-container {
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+        }
+        
+        .send-button {
+            margin-left: 10px;
+            background-color: #4e8cff;
+            color: white;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .play-btn {
-            background: linear-gradient(90deg, #2ecc71, #27ae60);
-            color: white;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-        }
-        
-        .play-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
-        }
-        
-        .stop-btn {
-            background: linear-gradient(90deg, #e74c3c, #c0392b);
-            color: white;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-        }
-        
-        .stop-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-        }
-        
-        .download-btn {
-            background: linear-gradient(90deg, #3498db, #2980b9);
-            color: white;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-        
-        .icon {
-            margin-right: 8px;
-            font-size: 1.2rem;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 600px) {
-            .controls {
-                grid-template-columns: 1fr;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contacts-container {
+                width: 80px;
             }
             
-            .buttons {
-                flex-direction: column;
+            .contact-info {
+                display: none;
             }
             
-            h1 {
-                font-size: 2rem;
+            .contact-avatar {
+                margin-right: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Convertisseur Texte en Parole</h1>
-            <p class="subtitle">Transformez n'importe quel texte en parole naturelle</p>
-        </header>
+    <!-- En-tête -->
+    <header>
+        <div class="logo">Messagerie</div>
+        <div class="user-info">
+            <span>Jean Dupont</span>
+            <div class="avatar">JD</div>
+        </div>
+    </header>
+    
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <!-- Liste des contacts -->
+        <div class="contacts-container">
+            <div class="contacts-header">Contacts</div>
+            <div class="search-container">
+                <input type="text" placeholder="Rechercher...">
+            </div>
+            <div class="contact-list">
+                <div class="contact active">
+                    <div class="contact-avatar">MS</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Marie Smith</div>
+                        <div class="contact-lastmsg">Salut, comment vas-tu ?</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">PD</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Pierre Dubois</div>
+                        <div class="contact-lastmsg">À demain pour la réunion !</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">EJ</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Emma Johnson</div>
+                        <div class="contact-lastmsg">Merci pour ton aide !</div>
+                    </div>
+                </div>
+                <div class="contact">
+                    <div class="contact-avatar">TM</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Thomas Martin</div>
+                        <div class="contact-lastmsg">Tu as vu le dernier film ?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <div class="main-content">
-            <div class="text-input">
-                <label for="text-to-speak">Entrez votre texte ici :</label>
-                <textarea id="text-to-speak" placeholder="Tapez ou collez le texte que vous souhaitez convertir en parole...">Bonjour ! Bienvenue sur notre convertisseur de texte en parole. Vous pouvez taper n'importe quel texte dans cette zone et l'écouter grâce à la synthèse vocale.</textarea>
-            </div>
-            
-            <div class="controls">
-                <div class="control-group">
-                    <label for="voice-select">Voix :</label>
-                    <select id="voice-select"></select>
-                </div>
-                
-                <div class="control-group">
-                    <label for="rate">Vitesse de lecture :</label>
-                    <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
-                    <span id="rate-value">1.0</span>
-                </div>
-                
-                <div class="control-group">
-                    <label for="pitch">Hauteur de la voix :</label>
-                    <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
-                    <span id="pitch-value">1.0</span>
-                </div>
-                
-                <div class="control-group">
-                    <label for="volume">Volume :</label>
-                    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
-                    <span id="volume-value">1.0</span>
+        <!-- Zone de conversation -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="current-contact">
+                    <div class="contact-avatar">MS</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Marie Smith</div>
+                        <div class="contact-lastmsg">En ligne</div>
+                    </div>
                 </div>
             </div>
             
-            <div class="buttons">
-                <button id="play-btn" class="play-btn">
-                    <span class="icon">▶</span> Lire le texte
-                </button>
-                <button id="stop-btn" class="stop-btn">
-                    <span class="icon">⏹</span> Arrêter
-                </button>
-                <button id="download-btn" class="download-btn">
-                    <span class="icon">⭳</span> Télécharger
+            <div class="messages-container">
+                <div class="message received">
+                    <div class="message-content">Salut Jean, comment vas-tu ?</div>
+                    <div class="message-time">10:05</div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-content">Salut Marie ! Je vais bien, merci. Et toi ?</div>
+                    <div class="message-time">10:07</div>
+                </div>
+                
+                <div class="message received">
+                    <div class="message-content">Très bien aussi. Tu as terminé le projet sur lequel tu travaillais ?</div>
+                    <div class="message-time">10:08</div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-content">Oui, je l'ai finalisé hier. C'était assez intense mais le résultat est satisfaisant.</div>
+                    <div class="message-time">10:10</div>
+                </div>
+                
+                <div class="message received">
+                    <div class="message-content">Félicitations ! J'ai hâte de voir le résultat.</div>
+                    <div class="message-time">10:12</div>
+                </div>
+            </div>
+            
+            <div class="message-input-container">
+                <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
+                <button class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
                 </button>
             </div>
         </div>
     </div>
-    
-    <footer>
-        <p>© 2023 Convertisseur Texte en Parole | Utilise la technologie de synthèse vocale de votre navigateur</p>
-    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const textArea = document.getElementById('text-to-speak');
-            const voiceSelect = document.getElementById('voice-select');
-            const rateInput = document.getElementById('rate');
-            const rateValue = document.getElementById('rate-value');
-            const pitchInput = document.getElementById('pitch');
-            const pitchValue = document.getElementById('pitch-value');
-            const volumeInput = document.getElementById('volume');
-            const volumeValue = document.getElementById('volume-value');
-            const playBtn = document.getElementById('play-btn');
-            const stopBtn = document.getElementById('stop-btn');
-            const downloadBtn = document.getElementById('download-btn');
-            
-            let speech = new SpeechSynthesisUtterance();
-            let voices = [];
-            let isSpeaking = false;
-            
-            // Récupérer les voix disponibles
-            function loadVoices() {
-                voices = speechSynthesis.getVoices();
-                voiceSelect.innerHTML = '';
+        // Fonctionnalité d'envoi de message
+        const messageInput = document.querySelector('.message-input');
+        const sendButton = document.querySelector('.send-button');
+        const messagesContainer = document.querySelector('.messages-container');
+        
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                // Créer un nouveau message
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'sent');
                 
-                // Filtrer les voix en français
-                const frenchVoices = voices.filter(voice => voice.lang.includes('fr'));
+                const now = new Date();
+                const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
                 
-                if (frenchVoices.length > 0) {
-                    frenchVoices.forEach(voice => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        option.textContent = `${voice.name} (${voice.lang})`;
-                        voiceSelect.appendChild(option);
-                    });
-                } else {
-                    // Afficher toutes les voix si aucune voix française n'est disponible
-                    voices.forEach(voice => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        option.textContent = `${voice.name} (${voice.lang})`;
-                        voiceSelect.appendChild(option);
-                    });
-                }
+                messageElement.innerHTML = `
+                    <div class="message-content">${messageText}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
                 
-                // Définir la voix par défaut
-                if (voices.length > 0) {
-                    speech.voice = voices[0];
-                }
+                // Ajouter le message à la conversation
+                messagesContainer.appendChild(messageElement);
+                
+                // Effacer le champ de saisie
+                messageInput.value = '';
+                
+                // Faire défiler vers le bas pour voir le nouveau message
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Simuler une réponse après un délai
+                setTimeout(() => {
+                    const replyElement = document.createElement('div');
+                    replyElement.classList.add('message', 'received');
+                    
+                    replyElement.innerHTML = `
+                        <div class="message-content">Merci pour votre message ! Je vous répondrai dès que possible.</div>
+                        <div class="message-time">${timeString}</div>
+                    `;
+                    
+                    messagesContainer.appendChild(replyElement);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 1000);
             }
-            
-            // Initialiser les voix
-            window.speechSynthesis.onvoiceschanged = function() {
-                loadVoices();
-            };
-            
-            // Mettre à jour les valeurs des paramètres
-            rateInput.addEventListener('input', function() {
-                rateValue.textContent = rateInput.value;
-                speech.rate = parseFloat(rateInput.value);
+        }
+        
+        // Événements pour l'envoi de message
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Sélectionner un contact
+        const contacts = document.querySelectorAll('.contact');
+        const currentContact = document.querySelector('.current-contact');
+        const chatHeader = document.querySelector('.chat-header');
+        
+        contacts.forEach(contact => {
+            contact.addEventListener('click', () => {
+                // Retirer la classe active de tous les contacts
+                contacts.forEach(c => c.classList.remove('active'));
+                
+                // Ajouter la classe active au contact cliqué
+                contact.classList.add('active');
+                
+                // Mettre à jour le contact actuel dans l'en-tête de chat
+                const contactAvatar = contact.querySelector('.contact-avatar').innerHTML;
+                const contactName = contact.querySelector('.contact-name').innerHTML;
+                
+                currentContact.innerHTML = `
+                    <div class="contact-avatar">${contactAvatar}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${contactName}</div>
+                        <div class="contact-lastmsg">En ligne</div>
+                    </div>
+                `;
             });
-            
-            pitchInput.addEventListener('input', function() {
-                pitchValue.textContent = pitchInput.value;
-                speech.pitch = parseFloat(pitchInput.value);
-            });
-            
-            volumeInput.addEventListener('input', function() {
-                volumeValue.textContent = volumeInput.value;
-                speech.volume = parseFloat(volumeInput.value);
-            });
-            
-            // Changer de voix
-            voiceSelect.addEventListener('change', function() {
-                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
-                if (selectedVoice) {
-                    speech.voice = selectedVoice;
-                }
-            });
-            
-            // Lire le texte
-            playBtn.addEventListener('click', function() {
-                if (isSpeaking) {
-                    speechSynthesis.resume();
-                    playBtn.innerHTML = '<span class="icon">⏸</span> Pause';
-                } else {
-                    speech.text = textArea.value;
-                    speechSynthesis.speak(speech);
-                    playBtn.innerHTML = '<span class="icon">⏸</span> Pause';
-                    isSpeaking = true;
-                }
-            });
-            
-            // Arrêter la lecture
-            stopBtn.addEventListener('click', function() {
-                speechSynthesis.cancel();
-                playBtn.innerHTML = '<span class="icon">▶</span> Lire le texte';
-                isSpeaking = false;
-            });
-            
-            // Télécharger le fichier audio (simulation)
-            downloadBtn.addEventListener('click', function() {
-                alert('Pour télécharger le fichier audio, une version premium serait nécessaire avec un serveur backend. Cette fonctionnalité est simulée.');
-            });
-            
-            // Événement lorsque la lecture est terminée
-            speech.onend = function() {
-                playBtn.innerHTML = '<span class="icon">▶</span> Lire le texte';
-                isSpeaking = false;
-            };
-            
-            // Initialiser les valeurs
-            rateValue.textContent = rateInput.value;
-            pitchValue.textContent = pitchInput.value;
-            volumeValue.textContent = volumeInput.value;
-            speech.rate = parseFloat(rateInput.value);
-            speech.pitch = parseFloat(pitchInput.value);
-            speech.volume = parseFloat(volumeInput.value);
+        });
+        
+        // Faire défiler les messages vers le bas au chargement
+        window.addEventListener('load', () => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
     </script>
 </body>
-</html>
+</html><script>function myFunction() {
+  alert("Button Clicked")
+}</script>
