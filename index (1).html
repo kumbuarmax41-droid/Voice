@@ -1,449 +1,520 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messagerie Instantanée</title>
-    <style>
-        /* Styles généraux */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* En-tête */
-        header {
-            background-color: #4e8cff;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #fff;
-            color: #4e8cff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        /* Contenu principal */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        /* Liste des contacts */
-        .contacts-container {
-            width: 300px;
-            background-color: white;
-            border-right: 1px solid #e0e0e0;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .contacts-header {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            font-weight: bold;
-        }
-        
-        .search-container {
-            padding: 10px 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .search-container input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            outline: none;
-        }
-        
-        .contact-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .contact {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .contact:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .contact.active {
-            background-color: #edf4ff;
-        }
-        
-        .contact-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .contact-info {
-            flex: 1;
-        }
-        
-        .contact-name {
-            font-weight: 500;
-        }
-        
-        .contact-lastmsg {
-            font-size: 0.8rem;
-            color: #777;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-        }
-        
-        /* Zone de conversation */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: white;
-            display: flex;
-            align-items: center;
-        }
-        
-        .current-contact {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
-        
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #f9f9f9;
-        }
-        
-        .message {
-            max-width: 70%;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .message.sent {
-            align-items: flex-end;
-            margin-left: auto;
-        }
-        
-        .message.received {
-            align-items: flex-start;
-        }
-        
-        .message-content {
-            padding: 10px 15px;
-            border-radius: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .message.sent .message-content {
-            background-color: #4e8cff;
-            color: white;
-        }
-        
-        .message.received .message-content {
-            background-color: white;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .message-time {
-            font-size: 0.7rem;
-            color: #777;
-        }
-        
-        .message-input-container {
-            padding: 15px 20px;
-            background-color: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .message-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            outline: none;
-            resize: none;
-            max-height: 100px;
-        }
-        
-        .send-button {
-            margin-left: 10px;
-            background-color: #4e8cff;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .contacts-container {
-                width: 80px;
-            }
-            
-            .contact-info {
-                display: none;
-            }
-            
-            .contact-avatar {
-                margin-right: 0;
-            }
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Luna — Chat IA local (browser only)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --card:#071025; --accent1:#7c3aed; --accent2:#06b6d4;
+  --muted:#9aa7b7; --text:#e6eef6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#020617,#071227);color:var(--text);min-height:100vh}
+.app{max-width:1100px;margin:24px auto;padding:18px;display:grid;grid-template-columns:1fr 340px;gap:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-weight:700;font-size:1.2rem}
+.controls{display:flex;gap:8px;align-items:center}
+.input, select, button {font-family:inherit}
+.btn {background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn-ghost {background:transparent;border:1px solid rgba(255,255,255,0.06);padding:7px 10px;border-radius:8px;color:var(--text)}
+.left {background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;min-height:70vh;display:flex;flex-direction:column}
+.right {background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;min-height:70vh;display:flex;flex-direction:column;gap:12px}
+.chat {flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:78%;padding:10px 12px;border-radius:12px;line-height:1.3}
+.msg.user{align-self:flex-end;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:rgba(255,255,255,0.02);color:var(--text)}
+.composer{display:flex;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.03)}
+.textarea{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-height:56px;resize:none}
+.voice-controls{display:flex;flex-direction:column;gap:6px}
+.small{font-size:0.85rem;color:var(--muted)}
+.section{background:rgba(255,255,255,0.01);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+.kv{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.file-list{display:flex;flex-direction:column;gap:8px;max-height:30vh;overflow:auto;padding-top:8px}
+.file-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
+.toast{position:fixed;right:20px;bottom:20px;padding:10px 14px;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white}
+.footer{grid-column:1/-1;text-align:center;color:var(--muted);font-size:0.9rem;margin-top:8px}
+@media(max-width:980px){.app{grid-template-columns:1fr;padding:12px}.right{order:2}.left{order:1}}
+</style>
 </head>
 <body>
-    <!-- En-tête -->
-    <header>
-        <div class="logo">Messagerie</div>
-        <div class="user-info">
-            <span>Jean Dupont</span>
-            <div class="avatar">JD</div>
-        </div>
-    </header>
-    
-    <!-- Contenu principal -->
-    <div class="main-container">
-        <!-- Liste des contacts -->
-        <div class="contacts-container">
-            <div class="contacts-header">Contacts</div>
-            <div class="search-container">
-                <input type="text" placeholder="Rechercher...">
-            </div>
-            <div class="contact-list">
-                <div class="contact active">
-                    <div class="contact-avatar">MS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Marie Smith</div>
-                        <div class="contact-lastmsg">Salut, comment vas-tu ?</div>
-                    </div>
-                </div>
-                <div class="contact">
-                    <div class="contact-avatar">PD</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Pierre Dubois</div>
-                        <div class="contact-lastmsg">À demain pour la réunion !</div>
-                    </div>
-                </div>
-                <div class="contact">
-                    <div class="contact-avatar">EJ</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Emma Johnson</div>
-                        <div class="contact-lastmsg">Merci pour ton aide !</div>
-                    </div>
-                </div>
-                <div class="contact">
-                    <div class="contact-avatar">TM</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Thomas Martin</div>
-                        <div class="contact-lastmsg">Tu as vu le dernier film ?</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Zone de conversation -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="current-contact">
-                    <div class="contact-avatar">MS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Marie Smith</div>
-                        <div class="contact-lastmsg">En ligne</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="messages-container">
-                <div class="message received">
-                    <div class="message-content">Salut Jean, comment vas-tu ?</div>
-                    <div class="message-time">10:05</div>
-                </div>
-                
-                <div class="message sent">
-                    <div class="message-content">Salut Marie ! Je vais bien, merci. Et toi ?</div>
-                    <div class="message-time">10:07</div>
-                </div>
-                
-                <div class="message received">
-                    <div class="message-content">Très bien aussi. Tu as terminé le projet sur lequel tu travaillais ?</div>
-                    <div class="message-time">10:08</div>
-                </div>
-                
-                <div class="message sent">
-                    <div class="message-content">Oui, je l'ai finalisé hier. C'était assez intense mais le résultat est satisfaisant.</div>
-                    <div class="message-time">10:10</div>
-                </div>
-                
-                <div class="message received">
-                    <div class="message-content">Félicitations ! J'ai hâte de voir le résultat.</div>
-                    <div class="message-time">10:12</div>
-                </div>
-            </div>
-            
-            <div class="message-input-container">
-                <textarea class="message-input" placeholder="Écrivez votre message..."></textarea>
-                <button class="send-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                </button>
-            </div>
-        </div>
+<div class="app">
+  <div class="left">
+    <div class="header">
+      <div class="logo">Luna — Chat IA (navigateurs)</div>
+      <div class="controls">
+        <select id="modelSelect" title="Choisir modèle">
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini-tts">gpt-4o-mini-tts</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        </select>
+        <button class="btn-ghost" id="clearBtn">Effacer</button>
+      </div>
     </div>
 
-    <script>
-        // Fonctionnalité d'envoi de message
-        const messageInput = document.querySelector('.message-input');
-        const sendButton = document.querySelector('.send-button');
-        const messagesContainer = document.querySelector('.messages-container');
-        
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                // Créer un nouveau message
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'sent');
-                
-                const now = new Date();
-                const timeString = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-                
-                messageElement.innerHTML = `
-                    <div class="message-content">${messageText}</div>
-                    <div class="message-time">${timeString}</div>
-                `;
-                
-                // Ajouter le message à la conversation
-                messagesContainer.appendChild(messageElement);
-                
-                // Effacer le champ de saisie
-                messageInput.value = '';
-                
-                // Faire défiler vers le bas pour voir le nouveau message
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                // Simuler une réponse après un délai
-                setTimeout(() => {
-                    const replyElement = document.createElement('div');
-                    replyElement.classList.add('message', 'received');
-                    
-                    replyElement.innerHTML = `
-                        <div class="message-content">Merci pour votre message ! Je vous répondrai dès que possible.</div>
-                        <div class="message-time">${timeString}</div>
-                    `;
-                    
-                    messagesContainer.appendChild(replyElement);
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 1000);
-            }
-        }
-        
-        // Événements pour l'envoi de message
-        sendButton.addEventListener('click', sendMessage);
-        
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        
-        // Sélectionner un contact
-        const contacts = document.querySelectorAll('.contact');
-        const currentContact = document.querySelector('.current-contact');
-        const chatHeader = document.querySelector('.chat-header');
-        
-        contacts.forEach(contact => {
-            contact.addEventListener('click', () => {
-                // Retirer la classe active de tous les contacts
-                contacts.forEach(c => c.classList.remove('active'));
-                
-                // Ajouter la classe active au contact cliqué
-                contact.classList.add('active');
-                
-                // Mettre à jour le contact actuel dans l'en-tête de chat
-                const contactAvatar = contact.querySelector('.contact-avatar').innerHTML;
-                const contactName = contact.querySelector('.contact-name').innerHTML;
-                
-                currentContact.innerHTML = `
-                    <div class="contact-avatar">${contactAvatar}</div>
-                    <div class="contact-info">
-                        <div class="contact-name">${contactName}</div>
-                        <div class="contact-lastmsg">En ligne</div>
-                    </div>
-                `;
-            });
-        });
-        
-        // Faire défiler les messages vers le bas au chargement
-        window.addEventListener('load', () => {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
-    </script>
+    <div style="margin-top:10px" class="section small">
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:700">Clé API (optionnelle)</div>
+          <div class="small">Si tu veux un vrai GPT avancé, colle ta clé OpenAI ici (⚠️ exposée dans ce navigateur)</div>
+        </div>
+        <div style="width:220px;text-align:right"><input id="apiKey" placeholder="sk-..." style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)"/></div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px" class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Chat</div>
+        <div class="small" id="memoryStatus">Mémoire : inactive</div>
+      </div>
+      <div id="chat" class="chat" aria-live="polite"></div>
+
+      <div class="composer">
+        <button class="btn-ghost" id="micBtn" title="Parler / arrêter">🎤</button>
+        <textarea id="input" class="textarea" placeholder="Tape ou parle (Enter pour envoyer)"></textarea>
+        <button class="btn" id="sendBtn">Envoyer</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+        <label class="small"><input type="checkbox" id="voiceReply" checked/> Réponse orale</label>
+        <label class="small" style="margin-left:8px">Voix: <select id="voiceSelect"></select></label>
+        <label class="small" style="margin-left:auto"><input type="checkbox" id="useMemory"/> Utiliser mémoire locale</label>
+      </div>
+    </div>
+
+    <div style="margin-top:10px" class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Ajouter des textes (mémoire)</div>
+        <div class="small">Upload .txt ou coller</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="file" id="fileUpload" accept=".txt" />
+        <button class="btn-ghost" id="pasteBtn">Coller un texte</button>
+        <button class="btn" id="buildEmbBtn" title="Créer embeddings (nécessite API key)">Indexer</button>
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="section">
+      <div style="font-weight:700">Paramètres & Tips</div>
+      <div class="small" style="margin-top:6px">
+        • Pour un vrai GPT puissant et mémoire vectorielle, colle ta clé OpenAI et clique sur <strong>Indexer</strong> pour créer les embeddings locaux.<br/>
+        • La clé est stockée localement (localStorage). Pour production il faut un backend sécurisé.<br/>
+        • Utilise la reconnaissance vocale (🎤) — navigateur support requis (Chrome).<br/>
+      </div>
+    </div>
+
+    <div class="section voice-controls">
+      <div style="font-weight:700">Voix / Réglages audio</div>
+      <div class="small">Rate <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1"/> Pitch <input id="pitch" type="range" min="0.5" max="2" step="0.1" value="1"/></div>
+    </div>
+
+    <div class="section">
+      <div style="font-weight:700">Historique & Export</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-ghost" id="downloadChat">Télécharger conversation</button>
+        <button class="btn-ghost" id="clearMemory">Supprimer mémoire</button>
+        <button class="btn" id="exportMemory">Exporter mémoire</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div style="font-weight:700">Infos</div>
+      <div class="small" style="margin-top:6px">Ce prototype fonctionne 100% dans le navigateur. Pour réponses avancées, renseigne une clé OpenAI (ou crée un proxy serveur).</div>
+    </div>
+  </div>
+
+  <div class="footer">Prototype — Luna (navigateur). Clé exposée dans le navigateur : attention.</div>
+</div>
+
+<script>
+/* === Luna — Browser-only chat with speech and optional OpenAI integration ===
+   Features:
+     - Chat UI + local history (localStorage)
+     - Speech recognition (Web Speech API) for input (mic button)
+     - SpeechSynthesis for bot voice, selectable voices
+     - Optional OpenAI usage (API key provided by user) for high-quality responses
+     - Local "memory" via embeddings (if API key present): upload .txt, index with embeddings, used as retrieval context
+     - All data stored locally (localStorage). No backend required.
+*/
+
+// ---------- Utility ----------
+const $ = id => document.getElementById(id);
+const toast = (t) => { const n=document.createElement('div'); n.className='toast'; n.innerText=t; document.body.appendChild(n); setTimeout(()=>n.remove(),2200); };
+
+// ---------- Persistence ----------
+const STORAGE = {
+  CHAT: 'luna_chat_history_v1',
+  MEM: 'luna_memory_v1',
+  KEY: 'luna_openai_key',
+  SETTINGS: 'luna_settings_v1'
+};
+
+function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+function saveJSON(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+// ---------- State ----------
+let chat = loadJSON(STORAGE.CHAT) || [];
+let memory = loadJSON(STORAGE.MEM) || []; // [{id, text, embedding?}]
+let settings = loadJSON(STORAGE.SETTINGS) || {voiceIndex:0, rate:1, pitch:1, voiceReply:true};
+let apiKey = localStorage.getItem(STORAGE.KEY) || '';
+if(apiKey) $('apiKey').value = apiKey;
+let speechRec = null;
+let recognizing = false;
+let voices = [];
+
+// ---------- UI refs ----------
+const chatEl = $('chat'), inputEl = $('input'), sendBtn = $('sendBtn'), micBtn = $('micBtn');
+const apiKeyEl = $('apiKey'), modelSelect = $('modelSelect'), useMemoryEl = $('useMemory');
+const fileUpload = $('fileUpload'), fileListEl = $('fileList'), buildEmbBtn = $('buildEmbBtn');
+const voiceSelect = $('voiceSelect'), voiceReplyEl = $('voiceReply'), rateEl = $('rate'), pitchEl = $('pitch');
+const clearBtn = $('clearBtn'), pasteBtn = $('pasteBtn'), downloadChat = $('downloadChat');
+const memoryStatus = $('memoryStatus'), clearMemoryBtn = $('clearMemory'), exportMemoryBtn = $('exportMemory');
+const buildBtn = buildEmbBtn;
+
+// ---------- Init ----------
+function init(){
+  renderChat();
+  renderFiles();
+  populateVoices();
+  restoreSettings();
+  bindEvents();
+  loadSavedKey();
+  updateMemoryStatus();
+}
+init();
+
+// ---------- Chat rendering ----------
+function renderChat(){
+  chatEl.innerHTML = '';
+  chat.forEach(m=>{
+    const d = document.createElement('div'); d.className='msg ' + (m.role==='user'?'user':'ai');
+    d.innerHTML = `<div style="font-size:0.95rem">${escapeHtml(m.content)}</div><div class="small" style="margin-top:6px;color:var(--muted)">${new Date(m.ts).toLocaleString()}</div>`;
+    chatEl.appendChild(d);
+  });
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+function addMessage(role, content){
+  const msg = {role, content, ts: new Date().toISOString()};
+  chat.push(msg); saveJSON(STORAGE.CHAT, chat); renderChat();
+}
+
+// ---------- Input/send ----------
+sendBtn.addEventListener('click', () => { sendInput(); });
+inputEl.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendInput(); } });
+clearBtn.addEventListener('click', ()=> { if(confirm('Effacer l\'historique ?')){ chat=[]; saveJSON(STORAGE.CHAT, chat); renderChat(); }});
+
+// ---------- Mic / speech recognition ----------
+function setupSpeechRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) { micBtn.disabled = true; micBtn.title = 'Reconnaissance vocale non supportée'; return; }
+  speechRec = new SpeechRecognition();
+  speechRec.lang = 'fr-FR';
+  speechRec.interimResults = false;
+  speechRec.maxAlternatives = 1;
+  speechRec.onresult = (ev) => {
+    const txt = ev.results[0][0].transcript;
+    inputEl.value = txt;
+    // auto-send
+    sendInput();
+  };
+  speechRec.onend = ()=> { recognizing = false; micBtn.classList.remove('active'); micBtn.textContent='🎤'; };
+  speechRec.onerror = (e)=> { console.error('speech error', e); recognizing=false; micBtn.classList.remove('active'); micBtn.textContent='🎤'; };
+}
+setupSpeechRecognition();
+
+micBtn.addEventListener('click', () => {
+  if(!speechRec) { toast('Reconnaissance vocale non disponible'); return; }
+  if(!recognizing){
+    try{ speechRec.start(); recognizing = true; micBtn.classList.add('active'); micBtn.textContent='⏺️'; }
+    catch(e){ console.error(e); }
+  } else {
+    speechRec.stop(); recognizing = false; micBtn.classList.remove('active'); micBtn.textContent='🎤';
+  }
+});
+
+// ---------- Speech Synthesis ----------
+function populateVoices(){
+  voices = window.speechSynthesis.getVoices();
+  voiceSelect.innerHTML = '';
+  voices.forEach((v,i)=> {
+    const o = document.createElement('option'); o.value=i; o.textContent = `${v.name} — ${v.lang}` + (v.default? ' (default)': '');
+    voiceSelect.appendChild(o);
+  });
+  // fallback if empty now; set from settings
+  voiceSelect.selectedIndex = settings.voiceIndex || 0;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+}
+voiceSelect.addEventListener('change', ()=> { settings.voiceIndex = voiceSelect.selectedIndex; saveJSON(STORAGE.SETTINGS, settings); });
+rateEl.addEventListener('change', ()=> { settings.rate = parseFloat(rateEl.value); saveJSON(STORAGE.SETTINGS, settings); });
+pitchEl.addEventListener('change', ()=> { settings.pitch = parseFloat(pitchEl.value); saveJSON(STORAGE.SETTINGS, settings); });
+voiceReplyEl.addEventListener('change', ()=> { settings.voiceReply = voiceReplyEl.checked; saveJSON(STORAGE.SETTINGS, settings); });
+
+function speakText(text){
+  if(!settings.voiceReply) return;
+  try{
+    const ut = new SpeechSynthesisUtterance(text);
+    const v = voices[settings.voiceIndex] || voices[0];
+    if(v) ut.voice = v;
+    ut.rate = settings.rate || 1;
+    ut.pitch = settings.pitch || 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(ut);
+  } catch(e){ console.error('TTS error', e); }
+}
+
+// ---------- Memory (files upload) ----------
+fileUpload.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const txt = await f.text();
+  memory.push({id: cryptoRandomId(), name: f.name, text: txt, uploadedAt: new Date().toISOString()});
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+});
+pasteBtn.addEventListener('click', async ()=> {
+  const txt = prompt('Colle ton texte ici (ou annule)');
+  if(!txt) return;
+  memory.push({id: cryptoRandomId(), name: 'pasted_'+(new Date().toISOString()), text: txt, uploadedAt: new Date().toISOString()});
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+});
+function renderFiles(){
+  fileListEl.innerHTML = '';
+  if(memory.length === 0){ fileListEl.innerHTML = '<div class="small">Aucune mémoire ajoutée</div>'; return; }
+  memory.forEach(m => {
+    const d = document.createElement('div'); d.className='file-item';
+    d.innerHTML = `<div><strong>${m.name}</strong><div class="small">${new Date(m.uploadedAt).toLocaleString()}</div></div>
+                   <div style="display:flex;gap:8px">
+                     <button class="btn-ghost" data-id="${m.id}" onclick="viewMemory(event)">Voir</button>
+                     <button class="btn-ghost" data-id="${m.id}" onclick="delMemory(event)">Suppr</button>
+                   </div>`;
+    fileListEl.appendChild(d);
+  });
+}
+window.viewMemory = (ev) => {
+  const id = ev.currentTarget.dataset.id;
+  const item = memory.find(m=>m.id===id);
+  if(item) alert(item.text.slice(0,400)+'\n\n(texte tronqué)');
+};
+window.delMemory = (ev) => {
+  const id = ev.currentTarget.dataset.id;
+  if(!confirm('Supprimer cet élément mémoire ?')) return;
+  memory = memory.filter(m=>m.id!==id);
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+};
+function cryptoRandomId(){ return 'm_'+Math.random().toString(36).slice(2,10); }
+function updateMemoryStatus(){ $('memoryStatus').textContent = memory.length ? `Mémoire : ${memory.length} items` : 'Mémoire : vide'; }
+
+// ---------- Embeddings indexing (optional, needs API key) ----------
+buildEmbBtn.addEventListener('click', async ()=> {
+  apiKey = $('apiKey').value.trim();
+  if(!apiKey){ toast('Ajoute ta clé OpenAI pour indexer'); return; }
+  // call embeddings for each memory item, store embedding vector
+  toast('Indexation... (vérifie la clé)');
+  for(let i=0;i<memory.length;i++){
+    const item = memory[i];
+    if(item.embedding) continue; // already indexed
+    try{
+      const emb = await getEmbedding(apiKey, item.text);
+      item.embedding = emb;
+      await sleep(200); // gentle pacing
+    } catch(e){ console.error(e); toast('Erreur embedding: '+(e.message||e)); break; }
+  }
+  saveJSON(STORAGE.MEM, memory);
+  toast('Indexation terminée');
+  updateMemoryStatus();
+});
+
+// ---------- Retrieval from memory ----------
+async function retrieveRelevantPieces(query, topK=3){
+  // If memory items have embeddings, compute query embedding and cosine scores
+  const items = memory.filter(m=>m.text && m.text.length>0);
+  if(items.length===0) return [];
+  const itemsWithEmb = items.filter(m=>m.embedding && Array.isArray(m.embedding));
+  if(itemsWithEmb.length === items.length){
+    // all indexed
+    const qemb = await getEmbedding(apiKey, query);
+    const scored = itemsWithEmb.map(m => ({m, score: cosine(qemb, m.embedding)}));
+    scored.sort((a,b)=>b.score - a.score);
+    return scored.slice(0, topK).map(s=>s.m);
+  } else {
+    // fallback: simple keyword match
+    const q = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const scored = items.map(m=>{
+      const text = (m.text||'').toLowerCase();
+      const s = q.reduce((acc,w)=> acc + (text.includes(w)?1:0), 0);
+      return {m, score:s};
+    }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+    return scored.slice(0, topK).map(s=>s.m);
+  }
+}
+function cosine(a,b){
+  // a,b arrays
+  let dot=0, na=0, nb=0;
+  for(let i=0;i<a.length;i++){ dot+= a[i]*b[i]; na+=a[i]*a[i]; nb+=b[i]*b[i]; }
+  return dot / (Math.sqrt(na)*Math.sqrt(nb) + 1e-12);
+}
+
+// ---------- OpenAI helpers (chat + embeddings) ----------
+async function getEmbedding(key, text){
+  const url = 'https://api.openai.com/v1/embeddings';
+  const model = 'text-embedding-3-small';
+  const res = await fetch(url, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
+    body: JSON.stringify({ input: text, model })
+  });
+  if(!res.ok) throw new Error('Embedding failed: '+res.status);
+  const js = await res.json();
+  return js.data[0].embedding;
+}
+
+async function callOpenAIChat(key, model, messages, stream=false){
+  // Simple non-streaming call to Chat Completions (v1)
+  const url = 'https://api.openai.com/v1/chat/completions';
+  const body = { model, messages, max_tokens: 800, temperature: 0.2 };
+  const res = await fetch(url, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key }, body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const txt = await res.text(); throw new Error('OpenAI error: '+res.status + ' ' + txt);
+  }
+  const js = await res.json();
+  return js.choices[0].message.content;
+}
+
+// ---------- Compose prompt with memory ----------
+async function composeSystemAndContext(userPrompt){
+  const model = modelSelect.value;
+  let systemPrompt = "Tu es Luna, une assistante bienveillante, concise, et précise. Réponds en français de façon claire.";
+  let contextTexts = [];
+  if(useMemoryEl.checked && memory.length>0 && apiKey){
+    // retrieve relevant
+    try{
+      const rel = await retrieveRelevantPieces(userPrompt, 3);
+      contextTexts = rel.map(r => `Mémoire [${r.name}]: ${r.text.slice(0,800)}`);
+    } catch(e){ console.error('retrieval error', e); }
+  }
+  return {systemPrompt, contextTexts};
+}
+
+// ---------- Send flow ----------
+async function sendInput(){
+  const text = inputEl.value.trim();
+  if(!text) return;
+  inputEl.value = '';
+  addMessage('user', text);
+
+  // Prepare backend or local
+  apiKey = $('apiKey').value.trim() || apiKey;
+  if(apiKey) localStorage.setItem(STORAGE.KEY, apiKey);
+
+  // Prepare messages
+  const {systemPrompt, contextTexts} = await composeSystemAndContext(text);
+  const messages = [];
+  messages.push({role:'system', content: systemPrompt});
+  if(contextTexts.length) messages.push({role:'system', content: 'Informations mémoire: \n' + contextTexts.join('\n\n')});
+  // include last N utterances
+  const recent = chat.slice(-8);
+  recent.forEach(m => messages.push({role: m.role === 'user' ? 'user' : 'assistant', content: m.content}));
+  messages.push({role:'user', content: text});
+
+  // If no API key -> fallback local reply
+  if(!apiKey){
+    // Basic local reply heuristics (toy)
+    let reply = localHeuristicReply(text);
+    addMessage('ai', reply);
+    if(voiceReplyEl.checked) speakText(reply);
+    return;
+  }
+
+  // Call OpenAI
+  try{
+    addMessage('ai', '…'); // placeholder while waiting
+    const model = modelSelect.value;
+    const reply = await callOpenAIChat(apiKey, model, messages);
+    // replace last placeholder:
+    chat.pop(); // remove placeholder
+    addMessage('ai', reply);
+    saveJSON(STORAGE.CHAT, chat);
+    if(voiceReplyEl.checked) speakText(reply);
+  } catch(e){
+    console.error(e);
+    chat.pop();
+    addMessage('ai', 'Erreur lors de l\'appel à l\'API: '+ (e.message || e));
+    toast('API error: ' + (e.message || '')); 
+  }
+}
+
+// ---------- Local heuristic fallback (when no API key) ----------
+function localHeuristicReply(q){
+  const low = q.toLowerCase();
+  if(low.includes('bonjour') || low.includes('salut')) return 'Bonjour ! Je suis Luna (mode hors-ligne). Je peux écouter et répondre. Pour de meilleures réponses, fournis une clé OpenAI.';
+  if(low.includes('comment') && low.includes('aller')) return 'Je vais bien, merci — et toi ?';
+  if(low.includes('musique')) return 'Tu veux une recommandation musicale ? Dis ton style préféré.';
+  // default echo + suggestion
+  return `Je peux répondre de façon limitée sans clé. Tu as dit : "${q.slice(0,120)}". Donne-moi plus de détails.`;
+}
+
+// ---------- Open / save key ----------
+function loadSavedKey(){ const k = localStorage.getItem(STORAGE.KEY); if(k){ apiKey=k; $('apiKey').value=k; } }
+$('apiKey').addEventListener('change', ()=> { localStorage.setItem(STORAGE.KEY, $('apiKey').value.trim()); apiKey = $('apiKey').value.trim(); toast('Clé enregistrée localement'); });
+
+// ---------- Exports / memory management ----------
+downloadChat.addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(chat, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'luna_chat.json'; a.click(); URL.revokeObjectURL(url);
+});
+clearMemoryBtn.addEventListener('click', ()=> { if(confirm('Supprimer toute la mémoire locale ?')){ memory=[]; saveJSON(STORAGE.MEM, memory); renderFiles(); updateMemoryStatus(); }});
+exportMemoryBtn.addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(memory, null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='luna_memory.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+// ---------- Helpers ----------
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ---------- initial render and restore settings ----------
+function restoreSettings(){
+  if(settings.voiceIndex !== undefined) voiceSelect.selectedIndex = settings.voiceIndex;
+  rateEl.value = settings.rate || 1; pitchEl.value = settings.pitch || 1;
+  voiceReplyEl.checked = settings.voiceReply !== false;
+}
+function bindEvents(){
+  // render chat from storage
+  renderChat();
+  renderFiles();
+}
+
+// ---------- Save on unload ----------
+window.addEventListener('beforeunload', ()=> {
+  saveJSON(STORAGE.CHAT, chat);
+  saveJSON(STORAGE.MEM, memory);
+  saveJSON(STORAGE.SETTINGS, settings);
+});
+
+// ---------- Update UI helpers ----------
+function loadSavedKey(){ const k = localStorage.getItem(STORAGE.KEY); if(k){ $('apiKey').value = k; apiKey = k; } }
+function updateMemoryStatus(){ memoryStatus.textContent = memory.length ? `Mémoire: ${memory.length} items` : 'Mémoire: vide'; }
+updateMemoryStatus();
+
+</script>
 </body>
-</html><script>function myFunction() {
+</html>
+<script>function myFunction() {
   alert("Button Clicked")
 }</script>
