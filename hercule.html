@@ -1,0 +1,478 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Luna — Chat IA (clé intégrée)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --card:#071025; --accent1:#7c3aed; --accent2:#06b6d4;
+  --muted:#9aa7b7; --text:#e6eef6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#020617,#071227);color:var(--text);min-height:100vh}
+.app{max-width:1100px;margin:24px auto;padding:18px;display:grid;grid-template-columns:1fr 340px;gap:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-weight:700;font-size:1.2rem}
+.controls{display:flex;gap:8px;align-items:center}
+.input, select, button {font-family:inherit}
+.btn {background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn-ghost {background:transparent;border:1px solid rgba(255,255,255,0.06);padding:7px 10px;border-radius:8px;color:var(--text)}
+.left {background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;min-height:70vh;display:flex;flex-direction:column}
+.right {background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:14px;border-radius:12px;min-height:70vh;display:flex;flex-direction:column;gap:12px}
+.chat {flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:78%;padding:10px 12px;border-radius:12px;line-height:1.3}
+.msg.user{align-self:flex-end;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:rgba(255,255,255,0.02);color:var(--text)}
+.composer{display:flex;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.03)}
+.textarea{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-height:56px;resize:none}
+.voice-controls{display:flex;flex-direction:column;gap:6px}
+.small{font-size:0.85rem;color:var(--muted)}
+.section{background:rgba(255,255,255,0.01);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+.kv{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.file-list{display:flex;flex-direction:column;gap:8px;max-height:30vh;overflow:auto;padding-top:8px}
+.file-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
+.toast{position:fixed;right:20px;bottom:20px;padding:10px 14px;border-radius:8px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white}
+.footer{grid-column:1/-1;text-align:center;color:var(--muted);font-size:0.9rem;margin-top:8px}
+@media(max-width:980px){.app{grid-template-columns:1fr;padding:12px}.right{order:2}.left{order:1}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="left">
+    <div class="header">
+      <div class="logo">Luna — Chat IA (clé intégrée)</div>
+      <div class="controls">
+        <select id="modelSelect" title="Choisir modèle">
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-4o">gpt-4o</option>
+          <option value="gpt-4o-mini-tts">gpt-4o-mini-tts</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        </select>
+        <button class="btn-ghost" id="clearBtn">Effacer</button>
+      </div>
+    </div>
+
+    <div style="margin-top:10px" class="section small">
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:700">Clé API (intégrée)</div>
+          <div class="small">Ta clé est intégrée dans ce fichier. Ne mets pas ce fichier en public.</div>
+        </div>
+        <div style="width:220px;text-align:right"><input id="apiKey" placeholder="sk-..." style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)"/></div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px" class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Chat</div>
+        <div class="small" id="memoryStatus">Mémoire : inactive</div>
+      </div>
+      <div id="chat" class="chat" aria-live="polite"></div>
+
+      <div class="composer">
+        <button class="btn-ghost" id="micBtn" title="Parler / arrêter">🎤</button>
+        <textarea id="input" class="textarea" placeholder="Tape ou parle (Enter pour envoyer)"></textarea>
+        <button class="btn" id="sendBtn">Envoyer</button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+        <label class="small"><input type="checkbox" id="voiceReply" checked/> Réponse orale</label>
+        <label class="small" style="margin-left:8px">Voix: <select id="voiceSelect"></select></label>
+        <label class="small" style="margin-left:auto"><input type="checkbox" id="useMemory"/> Utiliser mémoire locale</label>
+      </div>
+    </div>
+
+    <div style="margin-top:10px" class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">Ajouter des textes (mémoire)</div>
+        <div class="small">Upload .txt ou coller</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="file" id="fileUpload" accept=".txt" />
+        <button class="btn-ghost" id="pasteBtn">Coller un texte</button>
+        <button class="btn" id="buildEmbBtn" title="Créer embeddings (nécessite API key)">Indexer</button>
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="section">
+      <div style="font-weight:700">Paramètres & Tips</div>
+      <div class="small" style="margin-top:6px">
+        • Clé intégrée : attention à ne pas publier ce fichier. <br/>
+        • Pour la reconnaissance vocale, utilise Chrome. <br/>
+        • Indexation (embeddings) consomme des crédits OpenAI.
+      </div>
+    </div>
+
+    <div class="section voice-controls">
+      <div style="font-weight:700">Voix / Réglages audio</div>
+      <div class="small">Rate <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1"/> Pitch <input id="pitch" type="range" min="0.5" max="2" step="0.1" value="1"/></div>
+    </div>
+
+    <div class="section">
+      <div style="font-weight:700">Historique & Export</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-ghost" id="downloadChat">Télécharger conversation</button>
+        <button class="btn-ghost" id="clearMemory">Supprimer mémoire</button>
+        <button class="btn" id="exportMemory">Exporter mémoire</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div style="font-weight:700">Infos</div>
+      <div class="small" style="margin-top:6px">Prototype local. Clé intégrée : ne pas partager publiquement.</div>
+    </div>
+  </div>
+
+  <div class="footer">Prototype — Luna (clé intégrée). Attention à la sécurité.</div>
+</div>
+
+<script>
+/* === Luna — Browser-only chat with embedded OpenAI key ===
+   Your provided key is inserted below in OPENAI_API_KEY.
+   WARNING: Do NOT publish this file or push it to a public repo while the key is present.
+*/
+
+// === CONFIG: your OpenAI key (inserted) ===
+const OPENAI_API_KEY = "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";
+
+// ---------- Utility ----------
+const $ = id => document.getElementById(id);
+const toast = (t) => { const n=document.createElement('div'); n.className='toast'; n.innerText=t; document.body.appendChild(n); setTimeout(()=>n.remove(),2200); };
+
+// ---------- Persistence ----------
+const STORAGE = {
+  CHAT: 'luna_chat_history_v1',
+  MEM: 'luna_memory_v1',
+  KEY: 'luna_openai_key',
+  SETTINGS: 'luna_settings_v1'
+};
+
+function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+function saveJSON(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+// ---------- State ----------
+let chat = loadJSON(STORAGE.CHAT) || [];
+let memory = loadJSON(STORAGE.MEM) || []; // [{id, text, embedding?}]
+let settings = loadJSON(STORAGE.SETTINGS) || {voiceIndex:0, rate:1, pitch:1, voiceReply:true};
+localStorage.setItem(STORAGE.KEY, OPENAI_API_KEY); // persist key locally for convenience
+let apiKey = OPENAI_API_KEY;
+let speechRec = null;
+let recognizing = false;
+let voices = [];
+
+// ---------- UI refs ----------
+const chatEl = $('chat'), inputEl = $('input'), sendBtn = $('sendBtn'), micBtn = $('micBtn');
+const apiKeyEl = $('apiKey'), modelSelect = $('modelSelect'), useMemoryEl = $('useMemory');
+const fileUpload = $('fileUpload'), fileListEl = $('fileList'), buildEmbBtn = $('buildEmbBtn');
+const voiceSelect = $('voiceSelect'), voiceReplyEl = $('voiceReply'), rateEl = $('rate'), pitchEl = $('pitch');
+const clearBtn = $('clearBtn'), pasteBtn = $('pasteBtn'), downloadChat = $('downloadChat');
+const memoryStatus = $('memoryStatus'), clearMemoryBtn = $('clearMemory'), exportMemoryBtn = $('exportMemory');
+const buildBtn = buildEmbBtn;
+
+// ---------- Init ----------
+function init(){
+  $('apiKey').value = apiKey;
+  renderChat();
+  renderFiles();
+  populateVoices();
+  restoreSettings();
+  bindEvents();
+  updateMemoryStatus();
+}
+init();
+
+// ---------- Chat rendering ----------
+function renderChat(){
+  chatEl.innerHTML = '';
+  chat.forEach(m=>{
+    const d = document.createElement('div'); d.className='msg ' + (m.role==='user'?'user':'ai');
+    d.innerHTML = `<div style="font-size:0.95rem">${escapeHtml(m.content)}</div><div class="small" style="margin-top:6px;color:var(--muted)">${new Date(m.ts).toLocaleString()}</div>`;
+    chatEl.appendChild(d);
+  });
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+function addMessage(role, content){
+  const msg = {role, content, ts: new Date().toISOString()};
+  chat.push(msg); saveJSON(STORAGE.CHAT, chat); renderChat();
+}
+
+// ---------- Input/send ----------
+sendBtn.addEventListener('click', () => { sendInput(); });
+inputEl.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendInput(); } });
+clearBtn.addEventListener('click', ()=> { if(confirm('Effacer l\'historique ?')){ chat=[]; saveJSON(STORAGE.CHAT, chat); renderChat(); }});
+
+// ---------- Mic / speech recognition ----------
+function setupSpeechRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) { micBtn.disabled = true; micBtn.title = 'Reconnaissance vocale non supportée'; return; }
+  speechRec = new SpeechRecognition();
+  speechRec.lang = 'fr-FR';
+  speechRec.interimResults = false;
+  speechRec.maxAlternatives = 1;
+  speechRec.onresult = (ev) => {
+    const txt = ev.results[0][0].transcript;
+    inputEl.value = txt;
+    sendInput();
+  };
+  speechRec.onend = ()=> { recognizing = false; micBtn.classList.remove('active'); micBtn.textContent='🎤'; };
+  speechRec.onerror = (e)=> { console.error('speech error', e); recognizing=false; micBtn.classList.remove('active'); micBtn.textContent='🎤'; };
+}
+setupSpeechRecognition();
+
+micBtn.addEventListener('click', () => {
+  if(!speechRec) { toast('Reconnaissance vocale non disponible'); return; }
+  if(!recognizing){
+    try{ speechRec.start(); recognizing = true; micBtn.classList.add('active'); micBtn.textContent='⏺️'; }
+    catch(e){ console.error(e); }
+  } else {
+    speechRec.stop(); recognizing = false; micBtn.classList.remove('active'); micBtn.textContent='🎤';
+  }
+});
+
+// ---------- Speech Synthesis ----------
+function populateVoices(){
+  voices = window.speechSynthesis.getVoices();
+  voiceSelect.innerHTML = '';
+  voices.forEach((v,i)=> {
+    const o = document.createElement('option'); o.value=i; o.textContent = `${v.name} — ${v.lang}` + (v.default? ' (default)': '');
+    voiceSelect.appendChild(o);
+  });
+  voiceSelect.selectedIndex = settings.voiceIndex || 0;
+}
+if (typeof speechSynthesis !== 'undefined') {
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+}
+voiceSelect.addEventListener('change', ()=> { settings.voiceIndex = voiceSelect.selectedIndex; saveJSON(STORAGE.SETTINGS, settings); });
+rateEl.addEventListener('change', ()=> { settings.rate = parseFloat(rateEl.value); saveJSON(STORAGE.SETTINGS, settings); });
+pitchEl.addEventListener('change', ()=> { settings.pitch = parseFloat(pitchEl.value); saveJSON(STORAGE.SETTINGS, settings); });
+voiceReplyEl.addEventListener('change', ()=> { settings.voiceReply = voiceReplyEl.checked; saveJSON(STORAGE.SETTINGS, settings); });
+
+function speakText(text){
+  if(!settings.voiceReply) return;
+  try{
+    const ut = new SpeechSynthesisUtterance(text);
+    const v = voices[settings.voiceIndex] || voices[0];
+    if(v) ut.voice = v;
+    ut.rate = settings.rate || 1;
+    ut.pitch = settings.pitch || 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(ut);
+  } catch(e){ console.error('TTS error', e); }
+}
+
+// ---------- Memory (files upload) ----------
+fileUpload.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const txt = await f.text();
+  memory.push({id: cryptoRandomId(), name: f.name, text: txt, uploadedAt: new Date().toISOString()});
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+});
+pasteBtn.addEventListener('click', async ()=> {
+  const txt = prompt('Colle ton texte ici (ou annule)');
+  if(!txt) return;
+  memory.push({id: cryptoRandomId(), name: 'pasted_'+(new Date().toISOString()), text: txt, uploadedAt: new Date().toISOString()});
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+});
+function renderFiles(){
+  fileListEl.innerHTML = '';
+  if(memory.length === 0){ fileListEl.innerHTML = '<div class="small">Aucune mémoire ajoutée</div>'; return; }
+  memory.forEach(m => {
+    const d = document.createElement('div'); d.className='file-item';
+    d.innerHTML = `<div><strong>${m.name}</strong><div class="small">${new Date(m.uploadedAt).toLocaleString()}</div></div>
+                   <div style="display:flex;gap:8px">
+                     <button class="btn-ghost" data-id="${m.id}" onclick="viewMemory(event)">Voir</button>
+                     <button class="btn-ghost" data-id="${m.id}" onclick="delMemory(event)">Suppr</button>
+                   </div>`;
+    fileListEl.appendChild(d);
+  });
+}
+window.viewMemory = (ev) => {
+  const id = ev.currentTarget.dataset.id;
+  const item = memory.find(m=>m.id===id);
+  if(item) alert(item.text.slice(0,400)+'\n\n(texte tronqué)');
+};
+window.delMemory = (ev) => {
+  const id = ev.currentTarget.dataset.id;
+  if(!confirm('Supprimer cet élément mémoire ?')) return;
+  memory = memory.filter(m=>m.id!==id);
+  saveJSON(STORAGE.MEM, memory);
+  renderFiles();
+  updateMemoryStatus();
+};
+function cryptoRandomId(){ return 'm_'+Math.random().toString(36).slice(2,10); }
+function updateMemoryStatus(){ $('memoryStatus').textContent = memory.length ? `Mémoire: ${memory.length} items` : 'Mémoire: vide'; }
+
+// ---------- Embeddings indexing (optional) ----------
+buildEmbBtn.addEventListener('click', async ()=> {
+  if(!apiKey){ toast('Clé manquante'); return; }
+  toast('Indexation (embeddings) en cours...');
+  for(let i=0;i<memory.length;i++){
+    const item = memory[i];
+    if(item.embedding) continue;
+    try{
+      const emb = await getEmbedding(apiKey, item.text);
+      item.embedding = emb;
+      await sleep(200);
+    } catch(e){ console.error(e); toast('Erreur embedding'); break; }
+  }
+  saveJSON(STORAGE.MEM, memory);
+  toast('Indexation terminée');
+  updateMemoryStatus();
+});
+
+// ---------- Retrieval from memory ----------
+async function retrieveRelevantPieces(query, topK=3){
+  const items = memory.filter(m=>m.text && m.text.length>0);
+  if(items.length===0) return [];
+  const itemsWithEmb = items.filter(m=>m.embedding && Array.isArray(m.embedding));
+  if(itemsWithEmb.length === items.length){
+    const qemb = await getEmbedding(apiKey, query);
+    const scored = itemsWithEmb.map(m => ({m, score: cosine(qemb, m.embedding)}));
+    scored.sort((a,b)=>b.score - a.score);
+    return scored.slice(0, topK).map(s=>s.m);
+  } else {
+    const q = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const scored = items.map(m=>{
+      const text = (m.text||'').toLowerCase();
+      const s = q.reduce((acc,w)=> acc + (text.includes(w)?1:0), 0);
+      return {m, score:s};
+    }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+    return scored.slice(0, topK).map(s=>s.m);
+  }
+}
+function cosine(a,b){ let dot=0, na=0, nb=0; for(let i=0;i<a.length;i++){ dot+= a[i]*b[i]; na+=a[i]*a[i]; nb+=b[i]*b[i]; } return dot / (Math.sqrt(na)*Math.sqrt(nb) + 1e-12); }
+
+// ---------- OpenAI helpers ----------
+async function getEmbedding(key, text){
+  const url = 'https://api.openai.com/v1/embeddings';
+  const model = 'text-embedding-3-small';
+  const res = await fetch(url, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
+    body: JSON.stringify({ input: text, model })
+  });
+  if(!res.ok) throw new Error('Embedding failed: '+res.status);
+  const js = await res.json();
+  return js.data[0].embedding;
+}
+
+async function callOpenAIChat(key, model, messages){
+  const url = 'https://api.openai.com/v1/chat/completions';
+  const body = { model, messages, max_tokens: 800, temperature: 0.2 };
+  const res = await fetch(url, {
+    method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key }, body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const txt = await res.text(); throw new Error('OpenAI error: '+res.status + ' ' + txt);
+  }
+  const js = await res.json();
+  return js.choices[0].message.content;
+}
+
+// ---------- Compose prompt with memory ----------
+async function composeSystemAndContext(userPrompt){
+  const model = modelSelect.value;
+  let systemPrompt = "Tu es Luna, une assistante bienveillante, concise, et précise. Réponds en français.";
+  let contextTexts = [];
+  if(useMemoryEl.checked && memory.length>0 && apiKey){
+    try{
+      const rel = await retrieveRelevantPieces(userPrompt, 3);
+      contextTexts = rel.map(r => `Mémoire [${r.name}]: ${r.text.slice(0,800)}`);
+    } catch(e){ console.error('retrieval error', e); }
+  }
+  return {systemPrompt, contextTexts};
+}
+
+// ---------- Send flow ----------
+async function sendInput(){
+  const text = inputEl.value.trim();
+  if(!text) return;
+  inputEl.value = '';
+  addMessage('user', text);
+
+  apiKey = OPENAI_API_KEY || localStorage.getItem(STORAGE.KEY);
+  if(apiKey) localStorage.setItem(STORAGE.KEY, apiKey);
+
+  const {systemPrompt, contextTexts} = await composeSystemAndContext(text);
+  const messages = [];
+  messages.push({role:'system', content: systemPrompt});
+  if(contextTexts.length) messages.push({role:'system', content: 'Informations mémoire: \n' + contextTexts.join('\n\n')});
+  const recent = chat.slice(-8);
+  recent.forEach(m => messages.push({role: m.role === 'user' ? 'user' : 'assistant', content: m.content}));
+  messages.push({role:'user', content: text});
+
+  if(!apiKey){
+    let reply = localHeuristicReply(text);
+    addMessage('ai', reply);
+    if(voiceReplyEl.checked) speakText(reply);
+    return;
+  }
+
+  try{
+    addMessage('ai', '…');
+    const model = modelSelect.value;
+    const reply = await callOpenAIChat(apiKey, model, messages);
+    chat.pop();
+    addMessage('ai', reply);
+    saveJSON(STORAGE.CHAT, chat);
+    if(voiceReplyEl.checked) speakText(reply);
+  } catch(e){
+    console.error(e);
+    chat.pop();
+    addMessage('ai', 'Erreur lors de l\'appel à l\'API: '+ (e.message || e));
+    toast('API error: ' + (e.message || '')); 
+  }
+}
+
+// ---------- Local fallback ----------
+function localHeuristicReply(q){
+  const low = q.toLowerCase();
+  if(low.includes('bonjour') || low.includes('salut')) return 'Bonjour ! Je suis Luna (mode hors-ligne). Pour des réponses plus riches, la clé est intégrée.';
+  if(low.includes('comment') && low.includes('aller')) return 'Je vais bien, merci — et toi ?';
+  if(low.includes('musique')) return 'Tu veux une recommandation musicale ? Dis ton style préféré.';
+  return `Réponse locale : "${q.slice(0,120)}" — colle ta clé pour des réponses plus puissantes.`;
+}
+
+// ---------- Exports / memory management ----------
+$('apiKey').addEventListener('change', ()=> { localStorage.setItem(STORAGE.KEY, $('apiKey').value.trim()); apiKey = $('apiKey').value.trim(); toast('Clé mise à jour localement'); });
+downloadChat.addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(chat, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'luna_chat.json'; a.click(); URL.revokeObjectURL(url);
+});
+clearMemoryBtn.addEventListener('click', ()=> { if(confirm('Supprimer toute la mémoire locale ?')){ memory=[]; saveJSON(STORAGE.MEM, memory); renderFiles(); updateMemoryStatus(); }});
+exportMemoryBtn.addEventListener('click', ()=> {
+  const blob = new Blob([JSON.stringify(memory, null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='luna_memory.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+// ---------- Helpers ----------
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ---------- initial render and restore settings ----------
+function restoreSettings(){
+  if(settings.voiceIndex !== undefined) voiceSelect.selectedIndex = settings.voiceIndex;
+  rateEl.value = settings.rate || 1; pitchEl.value = settings.pitch || 1;
+  voiceReplyEl.checked = settings.voiceReply !== false;
+}
+function bindEvents(){ renderChat(); renderFiles(); }
+window.addEventListener('beforeunload', ()=> { saveJSON(STORAGE.CHAT, chat); saveJSON(STORAGE.MEM, memory); saveJSON(STORAGE.SETTINGS, settings); });
+
+function updateMemoryStatus(){ memoryStatus.textContent = memory.length ? `Mémoire: ${memory.length} items` : 'Mémoire: vide'; }
+updateMemoryStatus();
+
+</script>
+</body>
+</html>
