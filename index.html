@@ -3,103 +3,202 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Luna-lite — Chat IA</title>
+<title>Luna Messenger — IA</title>
 <style>
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1220;color:#e6eef6;min-height:100vh}
-  .wrap{max-width:1100px;margin:auto;padding:18px;display:grid;grid-template-columns:1fr 320px;gap:16px}
-  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  h1{margin:0;font-size:1.2rem}
-  .chat{height:65vh;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px}
-  .msg{max-width:78%;padding:10px 12px;border-radius:12px;line-height:1.3}
-  .msg.user{align-self:flex-end;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:white}
-  .msg.ai{align-self:flex-start;background:rgba(255,255,255,0.05)}
-  .composer{display:flex;gap:8px;margin-top:10px}
-  textarea{flex:1;min-height:60px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:white;resize:none}
-  .btn{background:linear-gradient(90deg,#7c3aed,#06b6d4);border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer}
-  aside{display:flex;flex-direction:column;gap:12px}
-  .card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.03)}
-  .small{font-size:0.85rem;color:#9aa7b7}
-  footer{grid-column:1/-1;text-align:center;color:#9aa7b7;margin-top:6px;font-size:0.85rem}
+  body {
+    margin:0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: #eceff1;
+    color: #111;
+  }
+  .app {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+  }
+  header {
+    background: linear-gradient(90deg,#7c3aed,#06b6d4);
+    color: white;
+    padding: 14px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chat {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: url("https://www.transparenttextures.com/patterns/cubes.png");
+  }
+  .msg {
+    max-width: 75%;
+    padding: 12px 14px;
+    border-radius: 18px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+  }
+  .msg.user {
+    align-self: flex-end;
+    background: linear-gradient(90deg,#7c3aed,#06b6d4);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai {
+    align-self: flex-start;
+    background: #f1f1f1;
+    border-bottom-left-radius: 4px;
+  }
+  .composer {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    background: #fafafa;
+  }
+  textarea {
+    flex: 1;
+    resize: none;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    outline: none;
+    background: #f1f3f4;
+  }
+  .btn {
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    cursor: pointer;
+    background: linear-gradient(90deg,#7c3aed,#06b6d4);
+    color: white;
+  }
+  .settings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    margin-right: 10px;
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div>
-    <header>
-      <h1>Luna-lite — Chat IA (local)</h1>
-      <button id="clearBtn" class="btn">Effacer historique</button>
-    </header>
-    <div id="chat" class="chat"></div>
-    <div class="composer">
-      <textarea id="input" placeholder="Écris ton message..."></textarea>
-      <button id="sendBtn" class="btn">Envoyer</button>
+<div class="app">
+  <header>
+    <div>💬 Luna Messenger</div>
+    <div class="settings">
+      <label><input type="checkbox" id="voiceToggle"> Répondre à voix haute</label>
+      <button id="clearBtn" style="background:none;border:none;color:white;cursor:pointer">🗑️</button>
     </div>
+  </header>
+  
+  <div id="chat" class="chat"></div>
+  
+  <div class="composer">
+    <textarea id="input" placeholder="Écris ton message..."></textarea>
+    <button id="sendBtn" class="btn">➤</button>
   </div>
-  <aside>
-    <div class="card">
-      <div class="small">Mémoire locale (KB): <span id="memCount">0</span> items</div>
-      <textarea id="kbAddText" placeholder="Ajouter un fait ou une note..." style="width:100%;height:80px;margin-top:8px"></textarea>
-      <button id="kbAddBtn" class="btn" style="margin-top:8px">Ajouter</button>
-    </div>
-    <div class="card">
-      <div class="small">Recherche web</div>
-      <input id="webQuery" placeholder="Recherche en ligne..." style="width:100%;margin-top:8px;padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:white"/>
-      <button id="webSearchBtn" class="btn" style="margin-top:8px">Chercher</button>
-      <div id="webResults" class="small" style="margin-top:8px;max-height:160px;overflow:auto"></div>
-    </div>
-  </aside>
-  <footer>Tout est stocké en localStorage. Pas de voix, juste des réponses écrites comme un vrai chat bot.</footer>
 </div>
 
 <script>
-// --- stockage ---
-const KEY_CHAT="lunalite_chat", KEY_KB="lunalite_kb";
-let chat=JSON.parse(localStorage.getItem(KEY_CHAT)||"[]");
-let kb=JSON.parse(localStorage.getItem(KEY_KB)||"[]");
+// === stockage ===
+const KEY_CHAT = "luna_chat";
+let chat = JSON.parse(localStorage.getItem(KEY_CHAT)||"[]");
 
-// --- refs ---
-const chatEl=document.getElementById("chat"), inputEl=document.getElementById("input");
-const sendBtn=document.getElementById("sendBtn"), clearBtn=document.getElementById("clearBtn");
-const kbAddBtn=document.getElementById("kbAddBtn"), kbAddText=document.getElementById("kbAddText");
-const memCount=document.getElementById("memCount"), webQuery=document.getElementById("webQuery");
-const webSearchBtn=document.getElementById("webSearchBtn"), webResults=document.getElementById("webResults");
+// === refs ===
+const chatEl = document.getElementById("chat");
+const inputEl = document.getElementById("input");
+const sendBtn = document.getElementById("sendBtn");
+const clearBtn = document.getElementById("clearBtn");
+const voiceToggle = document.getElementById("voiceToggle");
 
-// --- affichage ---
-function renderChat(){chatEl.innerHTML="";chat.forEach(m=>{const d=document.createElement("div");d.className="msg "+m.role;d.textContent=m.text;chatEl.appendChild(d)});chatEl.scrollTop=chatEl.scrollHeight}
-function renderKB(){memCount.textContent=kb.length}
-
-// --- ajouter message ---
-function addMessage(role,text){chat.push({role,text});localStorage.setItem(KEY_CHAT,JSON.stringify(chat));renderChat()}
-
-// --- petit moteur local (retrieval simplifié) ---
-function retrieve(query){query=query.toLowerCase();return kb.filter(k=>k.toLowerCase().includes(query)).slice(0,3)}
-
-// --- recherche web ---
-async function webSearch(q){
-  try{
-    const url="https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles="+encodeURIComponent(q)+"&origin=*";
-    const resp=await fetch(url);const j=await resp.json();
-    const pages=j.query.pages;const id=Object.keys(pages)[0];if(id!="-1"){return pages[id].extract}else{return "Pas de résultat web trouvé."}
-  }catch(e){return "Erreur de recherche web."}
+// === affichage ===
+function renderChat(){
+  chatEl.innerHTML="";
+  chat.forEach(m=>{
+    const d=document.createElement("div");
+    d.className="msg "+m.role;
+    d.textContent=m.text;
+    chatEl.appendChild(d);
+  });
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+function addMessage(role,text){
+  chat.push({role,text});
+  localStorage.setItem(KEY_CHAT,JSON.stringify(chat));
+  renderChat();
 }
 
-// --- génération de réponse ---
+// === base de connaissances locale élargie ===
+const kb = [
+  "La Terre est la troisième planète du système solaire.",
+  "La lumière voyage à environ 300 000 km par seconde.",
+  "Albert Einstein a développé la théorie de la relativité.",
+  "L'eau bout à 100 °C à pression atmosphérique normale.",
+  "La capitale de la France est Paris.",
+  "Le plus grand océan est l'océan Pacifique.",
+  "La tour Eiffel a été construite en 1889.",
+  "Un octet contient 8 bits.",
+  "L'électricité est le mouvement des électrons.",
+  "Le Soleil est une étoile de type naine jaune.",
+  "Les plantes produisent de l'oxygène grâce à la photosynthèse.",
+  "La Lune est le seul satellite naturel de la Terre.",
+  "Le diamant est une forme cristalline du carbone.",
+  "L'ADN contient l'information génétique des êtres vivants.",
+  "Le Python est un langage de programmation populaire.",
+  "L'Amazonie est la plus grande forêt tropicale du monde.",
+  "Le Mont Everest culmine à 8 848 mètres.",
+  "Le sang humain est rouge grâce à l'hémoglobine.",
+  "La gravité est une force d'attraction universelle.",
+  "Les ordinateurs utilisent le binaire (0 et 1)."
+];
+
+// === moteur simple ===
+function retrieve(query){
+  query=query.toLowerCase();
+  return kb.filter(k=>k.toLowerCase().includes(query)).slice(0,2);
+}
+
+// === génération de réponse ===
 async function replyTo(text){
-  const local=retrieve(text)
-  if(local.length){addMessage("ai","Mémoire locale:\n"+local.join("\n"));return}
-  const web=await webSearch(text);addMessage("ai",web)
+  const local = retrieve(text);
+  if(local.length){
+    addMessage("ai","📘 Mémoire locale:\n"+local.join("\n"));
+  } else {
+    addMessage("ai","🤔 Je ne trouve rien en mémoire locale. Essaie une autre question !");
+  }
+  if(voiceToggle.checked){ speak(chat[chat.length-1].text); }
 }
 
-// --- handlers ---
-sendBtn.onclick=()=>{const t=inputEl.value.trim();if(!t)return;inputEl.value="";addMessage("user",t);replyTo(t)}
-inputEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendBtn.click()}})
-clearBtn.onclick=()=>{if(confirm("Effacer l'historique ?")){chat=[];localStorage.removeItem(KEY_CHAT);renderChat()}}
-kbAddBtn.onclick=()=>{const t=kbAddText.value.trim();if(!t)return;kb.unshift(t);localStorage.setItem(KEY_KB,JSON.stringify(kb));kbAddText.value="";renderKB()}
-webSearchBtn.onclick=async()=>{const q=webQuery.value.trim();if(!q)return;webResults.textContent="Recherche...";const res=await webSearch(q);webResults.textContent=res}
+// === voix (optionnelle) ===
+function speak(txt){
+  const utter = new SpeechSynthesisUtterance(txt);
+  utter.lang = navigator.language || "fr-FR";
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
 
-// --- init ---
-if(chat.length===0)addMessage("ai","Salut, je suis Luna-lite (mode écrit seulement). Pose-moi une question !");
-renderChat();renderKB();
+// === events ===
+sendBtn.onclick=()=>{const t=inputEl.value.trim();if(!t)return;inputEl.value="";addMessage("user",t);replyTo(t);}
+inputEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendBtn.click();}});
+clearBtn.onclick=()=>{if(confirm("Effacer l'historique ?")){chat=[];localStorage.removeItem(KEY_CHAT);renderChat();}}
+
+// === init ===
+if(chat.length===0) addMessage("ai","👋 Salut, je suis Luna. Pose-moi une question !");
+renderChat();
 </script>
 </body>
 </html>
