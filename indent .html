@@ -1,0 +1,105 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Luna-lite — Chat IA</title>
+<style>
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1220;color:#e6eef6;min-height:100vh}
+  .wrap{max-width:1100px;margin:auto;padding:18px;display:grid;grid-template-columns:1fr 320px;gap:16px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  h1{margin:0;font-size:1.2rem}
+  .chat{height:65vh;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px}
+  .msg{max-width:78%;padding:10px 12px;border-radius:12px;line-height:1.3}
+  .msg.user{align-self:flex-end;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:white}
+  .msg.ai{align-self:flex-start;background:rgba(255,255,255,0.05)}
+  .composer{display:flex;gap:8px;margin-top:10px}
+  textarea{flex:1;min-height:60px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:white;resize:none}
+  .btn{background:linear-gradient(90deg,#7c3aed,#06b6d4);border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer}
+  aside{display:flex;flex-direction:column;gap:12px}
+  .card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.03)}
+  .small{font-size:0.85rem;color:#9aa7b7}
+  footer{grid-column:1/-1;text-align:center;color:#9aa7b7;margin-top:6px;font-size:0.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <header>
+      <h1>Luna-lite — Chat IA (local)</h1>
+      <button id="clearBtn" class="btn">Effacer historique</button>
+    </header>
+    <div id="chat" class="chat"></div>
+    <div class="composer">
+      <textarea id="input" placeholder="Écris ton message..."></textarea>
+      <button id="sendBtn" class="btn">Envoyer</button>
+    </div>
+  </div>
+  <aside>
+    <div class="card">
+      <div class="small">Mémoire locale (KB): <span id="memCount">0</span> items</div>
+      <textarea id="kbAddText" placeholder="Ajouter un fait ou une note..." style="width:100%;height:80px;margin-top:8px"></textarea>
+      <button id="kbAddBtn" class="btn" style="margin-top:8px">Ajouter</button>
+    </div>
+    <div class="card">
+      <div class="small">Recherche web</div>
+      <input id="webQuery" placeholder="Recherche en ligne..." style="width:100%;margin-top:8px;padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:white"/>
+      <button id="webSearchBtn" class="btn" style="margin-top:8px">Chercher</button>
+      <div id="webResults" class="small" style="margin-top:8px;max-height:160px;overflow:auto"></div>
+    </div>
+  </aside>
+  <footer>Tout est stocké en localStorage. Pas de voix, juste des réponses écrites comme un vrai chat bot.</footer>
+</div>
+
+<script>
+// --- stockage ---
+const KEY_CHAT="lunalite_chat", KEY_KB="lunalite_kb";
+let chat=JSON.parse(localStorage.getItem(KEY_CHAT)||"[]");
+let kb=JSON.parse(localStorage.getItem(KEY_KB)||"[]");
+
+// --- refs ---
+const chatEl=document.getElementById("chat"), inputEl=document.getElementById("input");
+const sendBtn=document.getElementById("sendBtn"), clearBtn=document.getElementById("clearBtn");
+const kbAddBtn=document.getElementById("kbAddBtn"), kbAddText=document.getElementById("kbAddText");
+const memCount=document.getElementById("memCount"), webQuery=document.getElementById("webQuery");
+const webSearchBtn=document.getElementById("webSearchBtn"), webResults=document.getElementById("webResults");
+
+// --- affichage ---
+function renderChat(){chatEl.innerHTML="";chat.forEach(m=>{const d=document.createElement("div");d.className="msg "+m.role;d.textContent=m.text;chatEl.appendChild(d)});chatEl.scrollTop=chatEl.scrollHeight}
+function renderKB(){memCount.textContent=kb.length}
+
+// --- ajouter message ---
+function addMessage(role,text){chat.push({role,text});localStorage.setItem(KEY_CHAT,JSON.stringify(chat));renderChat()}
+
+// --- petit moteur local (retrieval simplifié) ---
+function retrieve(query){query=query.toLowerCase();return kb.filter(k=>k.toLowerCase().includes(query)).slice(0,3)}
+
+// --- recherche web ---
+async function webSearch(q){
+  try{
+    const url="https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles="+encodeURIComponent(q)+"&origin=*";
+    const resp=await fetch(url);const j=await resp.json();
+    const pages=j.query.pages;const id=Object.keys(pages)[0];if(id!="-1"){return pages[id].extract}else{return "Pas de résultat web trouvé."}
+  }catch(e){return "Erreur de recherche web."}
+}
+
+// --- génération de réponse ---
+async function replyTo(text){
+  const local=retrieve(text)
+  if(local.length){addMessage("ai","Mémoire locale:\n"+local.join("\n"));return}
+  const web=await webSearch(text);addMessage("ai",web)
+}
+
+// --- handlers ---
+sendBtn.onclick=()=>{const t=inputEl.value.trim();if(!t)return;inputEl.value="";addMessage("user",t);replyTo(t)}
+inputEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendBtn.click()}})
+clearBtn.onclick=()=>{if(confirm("Effacer l'historique ?")){chat=[];localStorage.removeItem(KEY_CHAT);renderChat()}}
+kbAddBtn.onclick=()=>{const t=kbAddText.value.trim();if(!t)return;kb.unshift(t);localStorage.setItem(KEY_KB,JSON.stringify(kb));kbAddText.value="";renderKB()}
+webSearchBtn.onclick=async()=>{const q=webQuery.value.trim();if(!q)return;webResults.textContent="Recherche...";const res=await webSearch(q);webResults.textContent=res}
+
+// --- init ---
+if(chat.length===0)addMessage("ai","Salut, je suis Luna-lite (mode écrit seulement). Pose-moi une question !");
+renderChat();renderKB();
+</script>
+</body>
+</html>
