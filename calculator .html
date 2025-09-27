@@ -1,0 +1,209 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Mots de Passe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        #generateBtn {
+            background-color: silver;
+            color: black;
+        }
+        
+        #saveBtn {
+            background-color: silver;
+            color: black;
+        }
+        
+        #clearBtn {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .menu {
+            margin-bottom: 20px;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        .dropdown-content button {
+            width: 100%;
+            text-align: left;
+            background-color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        
+        .dropdown-content button:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .message {
+            text-align: center;
+            color: red;
+            margin: 10px 0;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Générateur de Mots de Passe</h1>
+        
+        <div class="menu">
+            <div class="dropdown">
+                <button style="background-color: #e0e0e0;">Menu ▼</button>
+                <div class="dropdown-content">
+                    <button onclick="generatePassword()">Créer un mot de passe</button>
+                    <button onclick="loadPassword()">Mot de passe précédent</button>
+                    <button onclick="showCustomMessage()">Créer votre propre mot de passe</button>
+                    <button onclick="quitApp()">Quitter</button>
+                </div>
+            </div>
+        </div>
+        
+        <input type="text" id="passwordInput" placeholder="Votre mot de passe apparaîtra ici">
+        
+        <div class="message" id="message"></div>
+        
+        <div class="buttons">
+            <button id="generateBtn" onclick="generatePassword()">Générer</button>
+            <button id="saveBtn" onclick="savePassword()">Enregistrer</button>
+            <button id="clearBtn" onclick="clearField()">Effacer</button>
+        </div>
+    </div>
+
+    <script>
+        // Liste des mots de base pour la génération
+        const wordList = [
+            'corn', 'maxi', 'note', 'putin', 'adghg_yg', 'tgwdsh_466', '568xfg_677', 
+            'msmb_345_yj', 'avengers_in_marvel', 'drum_pad', 'iron_patriote', 'doom_day', 
+            'stark', 'america', 'spark_stark', 'star_lord', 'america_fly', 'dior_xx', 
+            'pjjgf', 'dtgty4€€', 'qzatkvc', '1e78ffjkifx', 'dtyytt7753z', 'aeyyyfzr55fg', 
+            'ttt4zzdtyuij', 'ttfdr5tfffgg', 'u66tffy77uyg', 'yytgfxfy65ezzy'
+        ];
+        
+        // Générer un mot de passe aléatoire
+        function generatePassword() {
+            const randomNum = Math.floor(Math.random() * 900) + 100; // 100-999
+            const randomWord = wordList[Math.floor(Math.random() * wordList.length)];
+            const password = randomWord + randomNum;
+            
+            document.getElementById('passwordInput').value = password;
+        }
+        
+        // Enregistrer le mot de passe (simulation)
+        function savePassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password) {
+                localStorage.setItem('savedPassword', password);
+                alert('Mot de passe enregistré avec succès!');
+            } else {
+                alert('Veuillez d\'abord générer un mot de passe');
+            }
+        }
+        
+        // Charger le mot de passe précédent
+        function loadPassword() {
+            const savedPassword = localStorage.getItem('savedPassword');
+            if (savedPassword) {
+                document.getElementById('passwordInput').value = savedPassword;
+            } else {
+                alert('Aucun mot de passe enregistré précédemment');
+            }
+        }
+        
+        // Effacer le champ
+        function clearField() {
+            document.getElementById('passwordInput').value = '';
+        }
+        
+        // Afficher un message temporaire
+        function showCustomMessage() {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = 'Créez votre propre mot de passe et enregistrez-le';
+            
+            setTimeout(() => {
+                messageElement.textContent = '';
+            }, 3000);
+        }
+        
+        // Quitter l'application (simulation)
+        function quitApp() {
+            if (confirm('Voulez-vous vraiment quitter?')) {
+                // Dans un vrai navigateur, on ne peut pas fermer la fenêtre sans interaction utilisateur
+                alert('Application fermée (simulation)');
+            }
+        }
+        
+        // Charger le mot de passe sauvegardé au démarrage si disponible
+        window.onload = function() {
+            const savedPassword = localStorage.getItem('savedPassword');
+            if (savedPassword) {
+                document.getElementById('passwordInput').value = savedPassword;
+            }
+        };
+    </script>
+</body>
+</html>
